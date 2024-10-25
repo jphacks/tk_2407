@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
     "next": "15.0.1",
@@ -28,8 +28,8 @@
     "lint-staged": "^15.2.10",
     "postcss": "^8",
     "prettier": "3.3.3",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
