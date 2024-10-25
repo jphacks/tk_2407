@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "eslint --fix .",
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "dependencies": {
     "next": "15.0.1",
