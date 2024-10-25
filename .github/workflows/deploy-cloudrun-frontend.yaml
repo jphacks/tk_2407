@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/deploy-cloudrun-frontend.yaml'
+      - 'frontend/**'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
