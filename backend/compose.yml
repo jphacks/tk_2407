@@ -1,5 +1,6 @@
 services:
   server:
+    container_name: bakery-server
     depends_on:
       - db
     build:
@@ -10,6 +11,7 @@ services:
     volumes:
       - .:/app
   db:
+    container_name: bakery-db
     image: postgres:16
     environment:
       POSTGRES_USER: user
