@@ -1,23 +1,15 @@
 version: '3'
 
 tasks:
-  docker/dev/up:
-    aliases:
-      - dev-up
+  dev-up:
     cmds:
       - docker compose up -d
-  docker/dev/down:
-    aliases:
-      - dev-down
+  dev-down:
     cmds:
       - docker compose down
-  docker/dev/build:
-    aliases:
-      - dev-build
+  dev-build:
     cmds:
       - docker compose build
-  docker/dev/build/nocache:
-    aliases:
-      - dev-build-nocache
+  dev-build-nocache:
     cmds:
       - docker compose build --no-cache
