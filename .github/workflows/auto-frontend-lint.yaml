@@ -11,7 +11,10 @@ on:
       - synchronize
       - reopened
 jobs:
-  build-and-deploy:
+  run-lint:
+    defaults:
+      run:
+        working-directory: ./frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,7 +32,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          cache-dependency-path: './frontend/pnpm-lock.yaml'
       - name: Install dependencies
         run: pnpm install
-      - name: Run `yarn run lint`
+      - name: Run lint
         run: pnpm run lint
