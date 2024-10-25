@@ -1,0 +1,42 @@
+name: Auto lint check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - '.github/workflows/auto-frontend-lint.yaml'
+      - 'frontend/**'
+jobs:
+  run-lint:
+    defaults:
+      run:
+        working-directory: ./frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Setup pnpm
+        with:
+          version: 9
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: './frontend/pnpm-lock.yaml'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run lint
+        run: pnpm run lint

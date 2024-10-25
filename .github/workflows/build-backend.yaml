@@ -1,0 +1,28 @@
+name: Build Backend
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-backend.yaml'
+      - 'backend/**'
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./backend/go.mod
+          cache-dependency-path: ./backend/go.sum
+      - name: Execute Build
+        working-directory: backend
+        run: |
+          set -e
+          find ./cmd/* -type d | xargs -I{} sh -c 'go build {} && echo "Built: {}"'
