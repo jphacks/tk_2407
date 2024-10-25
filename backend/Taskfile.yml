@@ -1,0 +1,23 @@
+version: '3'
+
+tasks:
+  docker/start:
+    aliases:
+      - start
+    cmds:
+      - docker compose up -d
+  docker/stop:
+    aliases:
+      - stop
+    cmds:
+      - docker compose down
+  docker/build:
+    aliases:
+      - build
+    cmds:
+      - docker compose build
+  docker/build/nocache:
+    aliases:
+      - build nocache
+    cmds:
+      - docker compose build --no-cache
