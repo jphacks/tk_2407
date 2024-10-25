@@ -53,7 +53,7 @@ jobs:
       # reference: https://cloud.google.com/run/docs/deploying?hl=ja#revision -- check yaml tab.
       - name: Change some property of service-frontend.yaml
         run: |
-          sed -i "s/github_sha: .*/github_sha: ${{ github.sha }}/g" ./service-backend.yaml
+          sed -i "s/github_sha: .*/github_sha: ${{ github.sha }}/g" ./service-frontend.yaml
 
       - name: Deploy to Cloud Run
         id: deploy
