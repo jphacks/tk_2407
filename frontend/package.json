@@ -36,5 +36,5 @@
       "pnpm run lint:fix"
     ]
   },
-  "packageManager": "pnpm"
+  "packageManager": "pnpm@9.12.2"
 }
