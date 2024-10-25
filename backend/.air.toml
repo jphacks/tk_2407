@@ -1,0 +1,9 @@
+[build]
+cmd = "go build -o ./tmp/main ./cmd/dev/."
+bin = "./tmp/main"
+include_ext = ["go", "yaml", "toml"]
+exclude_regex = ["_test\\.go"]
+exclude_dir = ["tmp", "vendor"]
+
+[server]
+address = ":8080"
