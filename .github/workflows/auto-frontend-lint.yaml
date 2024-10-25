@@ -10,6 +10,9 @@ on:
       - opened
       - synchronize
       - reopened
+    paths:
+      - '.github/workflows/auto-frontend-lint.yaml'
+      - 'frontend/**'
 jobs:
   run-lint:
     defaults:
