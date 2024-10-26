@@ -169,7 +169,7 @@ components:
               longitude:
                 type: number
                 format: float
-            required: [spot_id,google_map_place_id,name,description,latitude,longitude]
+            required: [spot_id,google_map_place_id,name,description,latitude,longitude,photo_url]
       example:
         spots:
           - spot_id: "spot123"
