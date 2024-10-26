@@ -34,6 +34,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessMessageRes"
+  /api/v1/spot/{spotId}/photo:
+    get:
+      summary: Retrieve a list of locations
+      description: Retrieve a list of locations based on longitude, latitude
+      parameters:
+        - name: spotId
+          in: path
+          required: true
+          description: The ID of the location.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
   /api/v1/spots:
     get:
       tags:
@@ -241,17 +260,21 @@ components:
                 type: string
               name:
                 type: string
-              description:
-                type: string
-              photo_url:
-                type: string
               latitude:
                 type: number
                 format: float
               longitude:
                 type: number
                 format: float
-            required: [spot_id,google_map_place_id,name,description,latitude,longitude,photo_url]
+              address:
+                type: string
+              types:
+                type: array
+                items:
+                  type: string
+              photo_url:
+                type: string
+            required: [spot_id, google_map_place_id, name, latitude, longitude, address, types, photo_url]
       example:
         spots:
           - spot_id: "spot123"
@@ -260,12 +283,18 @@ components:
             description: "A quiet park with lovely scenery and walking paths."
             latitude: 35.6895
             longitude: 139.6917
+            address: "2 Chome-1-1 Otemachi, Chiyoda City, Tokyo 100-0004, Japan"
+            types: ["park"]
+            photo_url: "https://example.com/photo.jpg"
           - spot_id: "spot456"
             google_map_place_id: "ChIJyWEHuEmuEmsRm9hTkapTCrk"
             name: "Historic Museum"
             description: "A museum showcasing local history and artifacts."
             latitude: 35.6896
             longitude: 139.6920
+            address: "1 Chome-1-1 Otemachi, Chiyoda City, Tokyo 100-0004, Japan"
+            types: ["museum"]
+            photo_url: "https://example.com/photo.jpg"
     SuccessUserRes:
       properties:
         username:
