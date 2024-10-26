@@ -3,12 +3,14 @@ import { dataToURLString } from 'aspida';
 import type { Methods as Methods_6l8fl5 } from './api/v1/health';
 import type { Methods as Methods_1hjgtff } from './api/v1/messages/_location_id@string';
 import type { Methods as Methods_qb0a98 } from './api/v1/spots';
+import type { Methods as Methods_1xhfwx0 } from './api/v1/user/_user_id@string';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   const prefix = (baseURL === undefined ? '' : baseURL).replace(/\/$/, '');
   const PATH0 = '/api/v1/health';
   const PATH1 = '/api/v1/messages';
   const PATH2 = '/api/v1/spots';
+  const PATH3 = '/api/v1/user';
   const GET = 'GET';
 
   return {
@@ -65,6 +67,27 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
             fetch<Methods_qb0a98['get']['resBody'], BasicHeaders, Methods_qb0a98['get']['status']>(prefix, PATH2, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_qb0a98['get']['query'] } | undefined) =>
             `${prefix}${PATH2}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+        },
+        user: {
+          _user_id: (val3: string) => {
+            const prefix3 = `${PATH3}/${val3}`;
+
+            return {
+              /**
+               * get user
+               * @returns OK
+               */
+              get: (option?: { config?: T | undefined } | undefined) =>
+                fetch<Methods_1xhfwx0['get']['resBody'], BasicHeaders, Methods_1xhfwx0['get']['status']>(prefix, prefix3, GET, option).json(),
+              /**
+               * get user
+               * @returns OK
+               */
+              $get: (option?: { config?: T | undefined } | undefined) =>
+                fetch<Methods_1xhfwx0['get']['resBody'], BasicHeaders, Methods_1xhfwx0['get']['status']>(prefix, prefix3, GET, option).json().then(r => r.body),
+              $path: () => `${prefix}${prefix3}`,
+            };
+          },
         },
       },
     },

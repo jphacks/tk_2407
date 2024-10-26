@@ -34,6 +34,12 @@ type SuccessMessageRes struct {
 	} `json:"messages"`
 }
 
+// SuccessUserRes defines model for SuccessUserRes.
+type SuccessUserRes struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+}
+
 // GetApiV1SpotsParams defines parameters for GetApiV1Spots.
 type GetApiV1SpotsParams struct {
 	// Longitude The longitude of the location.
