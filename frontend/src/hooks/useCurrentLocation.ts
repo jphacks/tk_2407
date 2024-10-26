@@ -17,8 +17,6 @@ export function useCurrentLocation(): LocationState {
     error: true,
   })
 
-  const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
-
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocation({
@@ -30,19 +28,13 @@ export function useCurrentLocation(): LocationState {
 
     const watcherId = navigator.geolocation.watchPosition(
       (position: GeolocationPosition) => {
-        const now = Date.now()
-        // Update only if 0.8 seconds (800 ms) has passed since the last update
-        // fix me
-        if (now - lastUpdate >= 800) {
-          setLocation({
-            value: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-            error: false,
-          })
-          setLastUpdate(now) // Update the last update timestamp
-        }
+        setLocation({
+          value: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          error: false,
+        })
       },
       (error: GeolocationPositionError) => {
         setLocation({
@@ -56,7 +48,7 @@ export function useCurrentLocation(): LocationState {
       }
     )
 
-    // Cleanup function
+    // クリーンアップ関数
     return () => {
       navigator.geolocation.clearWatch(watcherId)
     }
