@@ -7,20 +7,25 @@ paths:
     get:
       description: health check
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
+  /messages:
+    get:
+      description: get message list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessageRes"
+
 components:
   responses:
-    SuccessResponse:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/SuccessRes"
     UnauthorizedError:
       description: Access token is missing or invalid
       content:
@@ -54,14 +59,40 @@ components:
         message:
           type: string
           example: healthy
-    SuccessRes:
+    SuccessMessageRes:
       type: object
-      required:
-        - message
       properties:
-        message:
-          type: string
-          example: ok
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Message ID
+              author:
+                type: string
+                description: Author of the message
+              content:
+                type: string
+                description: Message content
+              stamp:
+                type: string
+                description: Message stamp
+      example:
+        messages:
+          - id: 1
+            author: "田中さくら"
+            content: "桜の季節が来ました！公園で花見をするのが楽しみです。みんなでピクニックしましょう！"
+            stamp: ""
+          - id: 2
+            author: "佐藤健太"
+            content: "今朝、公園でジョギングしていたら、きれいな朝日を見ました。心が洗われる思いでした。"
+            stamp: ""
+          - id: 3
+            author: "鈴木美咲"
+            content: "子供たちと遊具で遊んだ後、芝生の上でお弁当。休日の過ごし方として最高です！"
+            stamp: ""
     ErrorRes:
       type: object
       required:
