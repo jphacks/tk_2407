@@ -32,6 +32,8 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
           cache-dependency-path: './frontend/pnpm-lock.yaml'
+      - name: Install dependencies
+        run: cd frontend && pnpm install
       - name: run openapi build
         run: make gen
       - name: check diff
