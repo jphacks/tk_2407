@@ -1,8 +1,6 @@
 'use client'
 
 import React from 'react'
-import api from '@/api/$api'
-import aspida from '@aspida/fetch'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -19,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import Link from 'next/link'
+import apiClient from '@/apiClient'
 
 const formSchema = z.object({
   email: z.string().email({ message: 'メールアドレスの形式が不適切です。' }),
@@ -31,12 +30,6 @@ const formSchema = z.object({
 })
 
 function SignupPage() {
-  const apiClient = api(
-    aspida(undefined, {
-      baseURL: 'http://localhost:8080',
-      credentials: 'include',
-    })
-  )
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
