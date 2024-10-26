@@ -12,6 +12,9 @@ type ServerInterface interface {
 
 	// (GET /health)
 	GetHealth(c *gin.Context)
+
+	// (GET /messages)
+	GetMessages(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -34,6 +37,19 @@ func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
 	}
 
 	siw.Handler.GetHealth(c)
+}
+
+// GetMessages operation middleware
+func (siw *ServerInterfaceWrapper) GetMessages(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetMessages(c)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -64,4 +80,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/health", wrapper.GetHealth)
+	router.GET(options.BaseURL+"/messages", wrapper.GetMessages)
 }

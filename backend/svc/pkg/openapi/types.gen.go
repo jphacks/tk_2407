@@ -7,3 +7,26 @@ package openapi
 type HealthRes struct {
 	Message string `json:"message"`
 }
+
+// SuccessMessageRes defines model for SuccessMessageRes.
+type SuccessMessageRes struct {
+	Messages *[]struct {
+		// Author Author of the message
+		Author *string `json:"author,omitempty"`
+
+		// Content Message content
+		Content *string `json:"content,omitempty"`
+
+		// Id Message ID
+		Id *int `json:"id,omitempty"`
+
+		// Stamps Message stamps
+		Stamps *map[string]struct {
+			// Count Stamp count
+			Count *int `json:"count,omitempty"`
+
+			// IsReacted Check if the user has stamped
+			IsReacted *bool `json:"is_reacted,omitempty"`
+		} `json:"stamps,omitempty"`
+	} `json:"messages,omitempty"`
+}
