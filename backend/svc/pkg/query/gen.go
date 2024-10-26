@@ -17,6 +17,8 @@ import (
 
 var (
 	Q               = new(Query)
+	GmPlace         *gmPlace
+	GmPlacePhoto    *gmPlacePhoto
 	Message         *message
 	Reaction        *reaction
 	SchemaMigration *schemaMigration
@@ -28,6 +30,8 @@ var (
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	GmPlace = &Q.GmPlace
+	GmPlacePhoto = &Q.GmPlacePhoto
 	Message = &Q.Message
 	Reaction = &Q.Reaction
 	SchemaMigration = &Q.SchemaMigration
@@ -40,6 +44,8 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:              db,
+		GmPlace:         newGmPlace(db, opts...),
+		GmPlacePhoto:    newGmPlacePhoto(db, opts...),
 		Message:         newMessage(db, opts...),
 		Reaction:        newReaction(db, opts...),
 		SchemaMigration: newSchemaMigration(db, opts...),
@@ -53,6 +59,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
+	GmPlace         gmPlace
+	GmPlacePhoto    gmPlacePhoto
 	Message         message
 	Reaction        reaction
 	SchemaMigration schemaMigration
@@ -67,6 +75,8 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
+		GmPlace:         q.GmPlace.clone(db),
+		GmPlacePhoto:    q.GmPlacePhoto.clone(db),
 		Message:         q.Message.clone(db),
 		Reaction:        q.Reaction.clone(db),
 		SchemaMigration: q.SchemaMigration.clone(db),
@@ -88,6 +98,8 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
+		GmPlace:         q.GmPlace.replaceDB(db),
+		GmPlacePhoto:    q.GmPlacePhoto.replaceDB(db),
 		Message:         q.Message.replaceDB(db),
 		Reaction:        q.Reaction.replaceDB(db),
 		SchemaMigration: q.SchemaMigration.replaceDB(db),
@@ -99,6 +111,8 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
+	GmPlace         IGmPlaceDo
+	GmPlacePhoto    IGmPlacePhotoDo
 	Message         IMessageDo
 	Reaction        IReactionDo
 	SchemaMigration ISchemaMigrationDo
@@ -110,6 +124,8 @@ type queryCtx struct {
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
+		GmPlace:         q.GmPlace.WithContext(ctx),
+		GmPlacePhoto:    q.GmPlacePhoto.WithContext(ctx),
 		Message:         q.Message.WithContext(ctx),
 		Reaction:        q.Reaction.WithContext(ctx),
 		SchemaMigration: q.SchemaMigration.WithContext(ctx),
