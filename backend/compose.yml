@@ -1,6 +1,6 @@
 services:
   server:
-    container_name: bakery-server
+    container_name: yosegaki-server
     depends_on:
       - db
     build:
@@ -11,16 +11,34 @@ services:
     volumes:
       - .:/app
   db:
-    container_name: bakery-db
+    container_name: yosegaki-db
     image: postgres:16
+    restart: always
+    shm_size: 128mb
     environment:
+      POSTGRES_DB: yosegaki
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: bakery
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  adminer:
+    container_name: yosegaki-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 6666:8080
+  migrate:
+    container_name: yosegaki-migate
+    volumes:
+      - ./migrate:/migrate
+    build:
+      context: .
+      dockerfile: migrate/Dockerfile
+
+
+
 
 volumes:
   db_data:

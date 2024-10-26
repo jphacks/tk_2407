@@ -3,7 +3,7 @@ version: '3'
 tasks:
   dev-up:
     cmds:
-      - docker compose up -d
+      - docker compose up server db adminer -d
   dev-down:
     cmds:
       - docker compose down
@@ -13,3 +13,19 @@ tasks:
   dev-build-nocache:
     cmds:
       - docker compose build --no-cache
+  migrate-up:
+    cmds:
+      - docker compose run --rm migrate migrate -path /migrate/migrations -database "postgresql://user:password@db:5432/yosegaki?sslmode=disable" up 1
+  migrate-down:
+    cmds:
+      - docker compse run --rm migrate migrate -path /migrate/migrations -database "postgresql://user:password@db:5432/yosegaki?sslmode=disable" down 1
+  migrate-create:
+    vars:
+      name: "{{.NAME}}"
+    cmds:
+      - |
+        if [ -z "{{.name}}" ]; then
+          echo "Usage: task migrate-create NAME=migration_name"
+        else
+          docker compose run --rm migrate migrate create -ext sql -dir /migrate/migrations  -seq "{{.name}}"
+        fi
