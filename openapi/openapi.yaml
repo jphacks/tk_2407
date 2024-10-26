@@ -82,6 +82,33 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
 
+  /api/v1/login:
+    post:
+      tags:
+        - auth
+      description: Login
+      requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      password:
+                        type: string
+                    required:
+                      - email
+                      - password
+      responses:
+        '201':
+            description: Created
+            content:
+                application/json:
+                schema:
+                    $ref: "#/components/schemas/SuccessLoginRes"
+
 components:
   responses:
     UnauthorizedError:
@@ -220,6 +247,10 @@ components:
       example:
         username: "johndoe"
         email: "johndoe@example.com"
+    SuccessLoginRes:
+      properties:
+        message:
+          type: string
     ErrorRes:
       type: object
       required:
