@@ -36,7 +36,7 @@ func (ah AuthHandler) Signup() gin.HandlerFunc {
 
 		c.SetCookie("token", tokenString, 3600*24, "/", "", false, true)
 
-		c.JSON(http.StatusOK, res)
+		c.JSON(http.StatusCreated, res)
 	}
 }
 
@@ -56,6 +56,6 @@ func (ah AuthHandler) Login() gin.HandlerFunc {
 
 		c.SetCookie("token", tokenString, 3600*24, "/", "", false, true)
 
-		c.JSON(http.StatusOK, res)
+		c.JSON(http.StatusCreated, res)
 	}
 }
