@@ -5,7 +5,7 @@ import api from '@/api/$api'
 import aspida from '@aspida/fetch'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const formSchema = z.object({
@@ -51,6 +50,7 @@ function LoginPage() {
           password: values.password,
         },
       })
+      console.log(res)
     } catch (e) {
       console.log(e)
     }

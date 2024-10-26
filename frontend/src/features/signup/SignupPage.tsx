@@ -5,23 +5,14 @@ import api from '@/api/$api'
 import aspida from '@aspida/fetch'
 
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -64,6 +55,8 @@ function SignupPage() {
           password: values.password,
         },
       })
+      // fix me
+      console.log(res)
     } catch (e) {
       console.log(e)
     }
