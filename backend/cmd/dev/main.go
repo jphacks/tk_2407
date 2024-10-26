@@ -1,8 +1,7 @@
 package main
 
 import (
-	"net/http"
-
+	"backend/pkg/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,11 +9,7 @@ func main() {
 	r := gin.Default()
 
 	// Health Check
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello from API server",
-		})
-	})
-
+	h := handler.NewHealthHandler()
+	r.GET("/health", h.Handle)
 	r.Run()
 }
