@@ -1,4 +1,4 @@
-/* eslint-disable complexity */
+import type { Ref } from 'react'
 import {
   forwardRef,
   useContext,
@@ -6,8 +6,6 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react'
-
-import type { Ref } from 'react'
 import { GoogleMapsContext, latLngEquals } from '@vis.gl/react-google-maps'
 
 type CircleEventProps = {
