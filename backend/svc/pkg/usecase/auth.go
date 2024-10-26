@@ -65,12 +65,7 @@ func (au AuthUsecase) Login(email string, password string) (*openapi.SuccessLogi
 		log.Println(err)
 		return nil, "", err
 	}
-	hashedPassword, err := cipher.GenHash(password)
-	if err != nil {
-		log.Println(err)
-		return nil, "", err
-	}
-	if err := cipher.Compare(user.PasswordHash, hashedPassword); err != nil {
+	if err := cipher.Compare(password, []byte(user.PasswordHash)); err != nil {
 		log.Println(err)
 		return nil, "", err
 	}
