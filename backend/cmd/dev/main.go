@@ -5,6 +5,7 @@ import (
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
 	"fmt"
+	"github.com/golang-migrate/migrate/v4"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,19 @@ func main() {
 	default:
 		log.Fatalf("invalid protocol: %s", conf.Infrastructure.Postgres.Protocol)
 	}
-	fmt.Println(dbUrl)
+
+	if conf.Application.Server.OnProduction {
+		log.Println("Running migration...")
+		m, err := migrate.New("file:///app/migrations", dbUrl)
+		if err != nil {
+			log.Fatalf("failed to create migration: %v", err)
+			return
+		}
+		if err := m.Up(); err != nil {
+			log.Fatalf("failed to migrate: %v", err)
+			return
+		}
+	}
 
 	// Health Check
 	h := handler.NewHealthHandler()
