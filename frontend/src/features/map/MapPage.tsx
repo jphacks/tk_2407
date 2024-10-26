@@ -12,9 +12,12 @@ export default function MapPage() {
 
   return (
     <div>
-      <APIProvider apiKey={API_KEY}>
-        <CustomMap centerLocation={currentLocation.value} />
-      </APIProvider>
+      <h1>Map</h1>
+      <div>
+        <APIProvider apiKey={API_KEY}>
+          <CustomMap centerLocation={currentLocation.value} />
+        </APIProvider>
+      </div>
     </div>
   )
 }
