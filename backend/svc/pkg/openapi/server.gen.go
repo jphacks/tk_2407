@@ -19,6 +19,9 @@ type ServerInterface interface {
 
 	// (GET /api/v1/messages/{location_id})
 	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
+
+	// (GET /api/v1/spots)
+	GetApiV1Spots(c *gin.Context, params GetApiV1SpotsParams)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -67,6 +70,54 @@ func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 	siw.Handler.GetApiV1MessagesLocationId(c, locationId)
 }
 
+// GetApiV1Spots operation middleware
+func (siw *ServerInterfaceWrapper) GetApiV1Spots(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetApiV1SpotsParams
+
+	// ------------- Required query parameter "longitude" -------------
+
+	if paramValue := c.Query("longitude"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument longitude is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "longitude", c.Request.URL.Query(), &params.Longitude)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter longitude: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Required query parameter "latitude" -------------
+
+	if paramValue := c.Query("latitude"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument latitude is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "latitude", c.Request.URL.Query(), &params.Latitude)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter latitude: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetApiV1Spots(c, params)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -96,4 +147,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 
 	router.GET(options.BaseURL+"/api/v1/health", wrapper.GetApiV1Health)
 	router.GET(options.BaseURL+"/api/v1/messages/:location_id", wrapper.GetApiV1MessagesLocationId)
+	router.GET(options.BaseURL+"/api/v1/spots", wrapper.GetApiV1Spots)
 }

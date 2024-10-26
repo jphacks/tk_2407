@@ -93,6 +93,9 @@ type ClientInterface interface {
 
 	// GetApiV1MessagesLocationId request
 	GetApiV1MessagesLocationId(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiV1Spots request
+	GetApiV1Spots(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) GetApiV1Health(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -109,6 +112,18 @@ func (c *Client) GetApiV1Health(ctx context.Context, reqEditors ...RequestEditor
 
 func (c *Client) GetApiV1MessagesLocationId(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetApiV1MessagesLocationIdRequest(c.Server, locationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiV1Spots(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiV1SpotsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -180,6 +195,63 @@ func NewGetApiV1MessagesLocationIdRequest(server string, locationId string) (*ht
 	return req, nil
 }
 
+// NewGetApiV1SpotsRequest generates requests for GetApiV1Spots
+func NewGetApiV1SpotsRequest(server string, params *GetApiV1SpotsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/spots")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "longitude", runtime.ParamLocationQuery, params.Longitude); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "latitude", runtime.ParamLocationQuery, params.Latitude); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -228,6 +300,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetApiV1MessagesLocationIdWithResponse request
 	GetApiV1MessagesLocationIdWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*GetApiV1MessagesLocationIdResponse, error)
+
+	// GetApiV1SpotsWithResponse request
+	GetApiV1SpotsWithResponse(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*GetApiV1SpotsResponse, error)
 }
 
 type GetApiV1HealthResponse struct {
@@ -274,6 +349,28 @@ func (r GetApiV1MessagesLocationIdResponse) StatusCode() int {
 	return 0
 }
 
+type GetApiV1SpotsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SuccessLocationRes
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiV1SpotsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiV1SpotsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 // GetApiV1HealthWithResponse request returning *GetApiV1HealthResponse
 func (c *ClientWithResponses) GetApiV1HealthWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1HealthResponse, error) {
 	rsp, err := c.GetApiV1Health(ctx, reqEditors...)
@@ -290,6 +387,15 @@ func (c *ClientWithResponses) GetApiV1MessagesLocationIdWithResponse(ctx context
 		return nil, err
 	}
 	return ParseGetApiV1MessagesLocationIdResponse(rsp)
+}
+
+// GetApiV1SpotsWithResponse request returning *GetApiV1SpotsResponse
+func (c *ClientWithResponses) GetApiV1SpotsWithResponse(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*GetApiV1SpotsResponse, error) {
+	rsp, err := c.GetApiV1Spots(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiV1SpotsResponse(rsp)
 }
 
 // ParseGetApiV1HealthResponse parses an HTTP response from a GetApiV1HealthWithResponse call
@@ -334,6 +440,32 @@ func ParseGetApiV1MessagesLocationIdResponse(rsp *http.Response) (*GetApiV1Messa
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest SuccessMessageRes
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetApiV1SpotsResponse parses an HTTP response from a GetApiV1SpotsWithResponse call
+func ParseGetApiV1SpotsResponse(rsp *http.Response) (*GetApiV1SpotsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiV1SpotsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SuccessLocationRes
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

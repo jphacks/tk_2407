@@ -8,6 +8,19 @@ type HealthRes struct {
 	Message string `json:"message"`
 }
 
+// SuccessLocationRes defines model for SuccessLocationRes.
+type SuccessLocationRes struct {
+	Spots *[]struct {
+		Description      string  `json:"description"`
+		GoogleMapPlaceId string  `json:"google_map_place_id"`
+		Latitude         float32 `json:"latitude"`
+		Longitude        float32 `json:"longitude"`
+		Name             string  `json:"name"`
+		PhotoUrl         string  `json:"photo_url"`
+		SpotId           string  `json:"spot_id"`
+	} `json:"spots"`
+}
+
 // SuccessMessageRes defines model for SuccessMessageRes.
 type SuccessMessageRes struct {
 	Messages []struct {
@@ -19,4 +32,13 @@ type SuccessMessageRes struct {
 			IsReacted bool `json:"is_reacted"`
 		} `json:"stamps"`
 	} `json:"messages"`
+}
+
+// GetApiV1SpotsParams defines parameters for GetApiV1Spots.
+type GetApiV1SpotsParams struct {
+	// Longitude The longitude of the location.
+	Longitude float32 `form:"longitude" json:"longitude"`
+
+	// Latitude The latitude of the location.
+	Latitude float32 `form:"latitude" json:"latitude"`
 }
