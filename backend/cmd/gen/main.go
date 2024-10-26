@@ -8,8 +8,8 @@ import (
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath:           "./pkg/query", // 出力パス
-		ModelPkgPath:      "./pkg/domain",
+		OutPath:           "./svc/pkg/query", // 出力パス
+		ModelPkgPath:      "./svc/pkg/domain",
 		FieldNullable:     true,
 		FieldWithIndexTag: true,
 		FieldWithTypeTag:  true,

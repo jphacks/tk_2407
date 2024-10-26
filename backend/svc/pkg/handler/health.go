@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"backend/pkg/openapi"
+	"backend/svc/pkg/openapi"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
