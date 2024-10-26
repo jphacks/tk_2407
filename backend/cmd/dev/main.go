@@ -19,14 +19,14 @@ func main() {
 	var dbUrl string
 	switch conf.Infrastructure.Postgres.Protocol {
 	case "tcp":
-		dbUrl = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable&TimeZone=Asia/Tokyo",
+		dbUrl = fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 			conf.Infrastructure.Postgres.User,
 			conf.Infrastructure.Postgres.Password,
 			conf.Infrastructure.Postgres.Host,
 			conf.Infrastructure.Postgres.Port,
 			conf.Infrastructure.Postgres.DBName)
 	case "unix":
-		dbUrl = fmt.Sprintf("postgresql://%s:%s@/%s?host=%s",
+		dbUrl = fmt.Sprintf("postgres://%s:%s@/%s?host=%s",
 			conf.Infrastructure.Postgres.User,
 			conf.Infrastructure.Postgres.Password,
 			conf.Infrastructure.Postgres.DBName,
