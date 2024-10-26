@@ -5,20 +5,68 @@ info:
 paths:
   /health:
     get:
-      summary: Health check endpoint
-      description: Returns the health status of the application in JSON format.
+      description: health check
       responses:
-        '200':
-          description: OK - Service is healthy
+        200:
+          description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "healthy"
-                  timestamp:
-                    type: string
-                    format: date-time
-                    example: "2024-10-26T14:00:00Z"
+                $ref: "#/components/schemas/HealthRes"
+components:
+  responses:
+    SuccessResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SuccessRes"
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorRes"
+    BadRequestError:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorRes"
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorRes"
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorRes"
+  schemas:
+    HealthRes:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: healthy
+    SuccessRes:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: ok
+    ErrorRes:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: error message
