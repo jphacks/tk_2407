@@ -13,11 +13,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
-  /api/v1/messages/{location_id}:
+  /api/v1/messages/{locationId}:
     get:
       description: get message list
       parameters:
-      - name: location_id
+      - name: locationId
         in: path
         required: true
         description: The ID of the location to get messages for
@@ -55,11 +55,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessLocationRes"
-  /api/v1/user/{user_id}:
+  /api/v1/user/{userId}:
     get:
       description: get user
       parameters:
-      - name: user_id
+      - name: userId
         in: path
         required: true
         description: The ID of user

@@ -17,13 +17,13 @@ type ServerInterface interface {
 	// (GET /api/v1/health)
 	GetApiV1Health(c *gin.Context)
 
-	// (GET /api/v1/messages/{location_id})
+	// (GET /api/v1/messages/{locationId})
 	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
 
 	// (GET /api/v1/spots)
 	GetApiV1Spots(c *gin.Context, params GetApiV1SpotsParams)
 
-	// (GET /api/v1/user/{user_id})
+	// (GET /api/v1/user/{userId})
 	GetApiV1UserUserId(c *gin.Context, userId string)
 }
 
@@ -54,12 +54,12 @@ func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "location_id" -------------
+	// ------------- Path parameter "locationId" -------------
 	var locationId string
 
-	err = runtime.BindStyledParameter("simple", false, "location_id", c.Param("location_id"), &locationId)
+	err = runtime.BindStyledParameter("simple", false, "locationId", c.Param("locationId"), &locationId)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter location_id: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter locationId: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -126,12 +126,12 @@ func (siw *ServerInterfaceWrapper) GetApiV1UserUserId(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "user_id" -------------
+	// ------------- Path parameter "userId" -------------
 	var userId string
 
-	err = runtime.BindStyledParameter("simple", false, "user_id", c.Param("user_id"), &userId)
+	err = runtime.BindStyledParameter("simple", false, "userId", c.Param("userId"), &userId)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter userId: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -173,7 +173,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/api/v1/health", wrapper.GetApiV1Health)
-	router.GET(options.BaseURL+"/api/v1/messages/:location_id", wrapper.GetApiV1MessagesLocationId)
+	router.GET(options.BaseURL+"/api/v1/messages/:locationId", wrapper.GetApiV1MessagesLocationId)
 	router.GET(options.BaseURL+"/api/v1/spots", wrapper.GetApiV1Spots)
-	router.GET(options.BaseURL+"/api/v1/user/:user_id", wrapper.GetApiV1UserUserId)
+	router.GET(options.BaseURL+"/api/v1/user/:userId", wrapper.GetApiV1UserUserId)
 }

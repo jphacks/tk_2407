@@ -182,7 +182,7 @@ func NewGetApiV1MessagesLocationIdRequest(server string, locationId string) (*ht
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "location_id", runtime.ParamLocationPath, locationId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "locationId", runtime.ParamLocationPath, locationId)
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +273,7 @@ func NewGetApiV1UserUserIdRequest(server string, userId string) (*http.Request, 
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "user_id", runtime.ParamLocationPath, userId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "userId", runtime.ParamLocationPath, userId)
 	if err != nil {
 		return nil, err
 	}
