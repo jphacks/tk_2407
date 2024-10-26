@@ -7,20 +7,32 @@ paths:
     get:
       description: health check
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
+  /api/v1/messages/{location_id}:
+    get:
+      description: get message list
+      parameters:
+      - name: location_id
+        in: path
+        required: true
+        description: The ID of the location to get messages for
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessageRes"
+
 components:
   responses:
-    SuccessResponse:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/SuccessRes"
     UnauthorizedError:
       description: Access token is missing or invalid
       content:
@@ -54,14 +66,60 @@ components:
         message:
           type: string
           example: healthy
-    SuccessRes:
+    SuccessMessageRes:
       type: object
-      required:
-        - message
       properties:
-        message:
-          type: string
-          example: ok
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string  # メッセージ ID
+              author_name:
+                type: string  # メッセージの著者名
+              content:
+                type: string  # メッセージの内容
+              stamps:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    count:
+                      type: integer  # スタンプのカウント
+                    is_reacted:
+                      type: boolean  # ユーザーがスタンプを押したかどうか
+                  required: [count,is_reacted]
+                nullable: true
+            required: [id, author_name, content]  # messages 配列内の必須フィールド
+      required: [messages]  # SuccessMessageRes の必須フィールド
+
+      example:
+        messages:
+          - id: 1
+            author: "田中さくら"
+            content: "桜の季節が来ました！公園で花見をするのが楽しみです。みんなでピクニックしましょう！"
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
+              heart:
+                count: 3
+                is_reacted: false
+          - id: 2
+            author: "佐藤健太"
+            content: "今朝、公園でジョギングしていたら、きれいな朝日を見ました。心が洗われる思いでした。"
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
+          - id: 3
+            author: "鈴木美咲"
+            content: "子供たちと遊具で遊んだ後、芝生の上でお弁当。休日の過ごし方として最高です！"
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
     ErrorRes:
       type: object
       required:

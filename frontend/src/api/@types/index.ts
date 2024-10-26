@@ -3,15 +3,24 @@ export type HealthRes = {
   message: string;
 }
 
-export type SuccessRes = {
-  message: string;
+export type SuccessMessageRes = {
+  messages: {
+    id: string;
+    author_name: string;
+    content: string;
+
+    stamps?: {
+      [key: string]: {
+        count: number;
+        is_reacted: boolean;
+      };
+    } | null | undefined;
+  }[];
 }
 
 export type ErrorRes = {
   message: string;
 }
-
-export type SuccessResponse = SuccessRes
 
 export type UnauthorizedError = ErrorRes
 

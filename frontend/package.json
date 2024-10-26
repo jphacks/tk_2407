@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
-    "api:build": "openapi2aspida -i ../openapi/openapi.yaml -o ./src/api",
+    "api:build": "rm -rf ./src/api && openapi2aspida -i ../openapi/openapi.yaml -o ./src/api",
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {

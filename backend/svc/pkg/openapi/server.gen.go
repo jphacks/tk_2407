@@ -4,11 +4,18 @@
 package openapi
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/oapi-codegen/runtime"
 )
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /api/v1/messages/{location_id})
+	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
 
 	// (GET /health)
 	GetHealth(c *gin.Context)
@@ -22,6 +29,30 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(c *gin.Context)
+
+// GetApiV1MessagesLocationId operation middleware
+func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "location_id" -------------
+	var locationId string
+
+	err = runtime.BindStyledParameter("simple", false, "location_id", c.Param("location_id"), &locationId)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter location_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetApiV1MessagesLocationId(c, locationId)
+}
 
 // GetHealth operation middleware
 func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
@@ -63,5 +94,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
+	router.GET(options.BaseURL+"/api/v1/messages/:location_id", wrapper.GetApiV1MessagesLocationId)
 	router.GET(options.BaseURL+"/health", wrapper.GetHealth)
 }
