@@ -1,14 +1,19 @@
-import React from 'react'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { CustomMap } from '@/components/CustomMap'
+import { useCurrentLocation } from '@/hooks/useCurrentLocation'
 
 export default function MapPage() {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
-  console.log(API_KEY)
+  const currentLocation = useCurrentLocation()
+
+  if (currentLocation.error) {
+    return null
+  }
+
   return (
     <div>
       <APIProvider apiKey={API_KEY}>
-        <CustomMap />
+        <CustomMap centerLocation={currentLocation.value} />
       </APIProvider>
     </div>
   )
