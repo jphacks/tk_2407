@@ -5,10 +5,11 @@ import (
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
 	"fmt"
-	"github.com/golang-migrate/migrate/v4"
 	"log"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/golang-migrate/migrate/source/file"
+	"github.com/golang-migrate/migrate/v4"
 )
 
 func main() {
