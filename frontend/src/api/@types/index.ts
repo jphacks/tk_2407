@@ -36,7 +36,11 @@ export type SuccessUserRes = {
 }
 
 export type SuccessLoginRes = {
-  message?: string | undefined;
+  userId?: string | undefined;
+}
+
+export type SuccessSignupRes = {
+  userId?: string | undefined;
 }
 
 export type ErrorRes = {

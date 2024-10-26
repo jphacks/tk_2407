@@ -23,7 +23,7 @@ type SuccessLocationRes struct {
 
 // SuccessLoginRes defines model for SuccessLoginRes.
 type SuccessLoginRes struct {
-	Message *string `json:"message,omitempty"`
+	UserId *string `json:"userId,omitempty"`
 }
 
 // SuccessMessageRes defines model for SuccessMessageRes.
@@ -39,6 +39,11 @@ type SuccessMessageRes struct {
 	} `json:"messages"`
 }
 
+// SuccessSignupRes defines model for SuccessSignupRes.
+type SuccessSignupRes struct {
+	UserId *string `json:"userId,omitempty"`
+}
+
 // SuccessUserRes defines model for SuccessUserRes.
 type SuccessUserRes struct {
 	Email    string `json:"email"`
@@ -49,6 +54,13 @@ type SuccessUserRes struct {
 type PostApiV1LoginJSONBody struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+// PostApiV1SignupJSONBody defines parameters for PostApiV1Signup.
+type PostApiV1SignupJSONBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Username string `json:"username"`
 }
 
 // GetApiV1SpotsParams defines parameters for GetApiV1Spots.
@@ -62,3 +74,6 @@ type GetApiV1SpotsParams struct {
 
 // PostApiV1LoginJSONRequestBody defines body for PostApiV1Login for application/json ContentType.
 type PostApiV1LoginJSONRequestBody PostApiV1LoginJSONBody
+
+// PostApiV1SignupJSONRequestBody defines body for PostApiV1Signup for application/json ContentType.
+type PostApiV1SignupJSONRequestBody PostApiV1SignupJSONBody
