@@ -18,6 +18,18 @@ export type SuccessMessageRes = {
   }[];
 }
 
+export type SuccessLocationRes = {
+  spots?: {
+    spot_id: string;
+    google_map_place_id: string;
+    name: string;
+    description: string;
+    photo_url: string;
+    latitude: number;
+    longitude: number;
+  }[] | null | undefined;
+}
+
 export type ErrorRes = {
   message: string;
 }
