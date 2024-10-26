@@ -7,6 +7,7 @@ import (
 	"backend/svc/pkg/domain"
 	"backend/svc/pkg/openapi"
 	"backend/svc/pkg/query"
+	"log"
 	"time"
 
 	"github.com/oklog/ulid/v2"
@@ -30,6 +31,7 @@ func (au AuthUsecase) Signup(email string, username string, password string) (*o
 	userID := ulid.Make()
 	passwordHash, err := cipher.GenHash(password)
 	if err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 	if err := au.q.User.Create(&domain.User{
@@ -40,6 +42,7 @@ func (au AuthUsecase) Signup(email string, username string, password string) (*o
 		CreatedAt:    &now,
 		UpdatedAt:    &now,
 	}); err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 
@@ -48,6 +51,7 @@ func (au AuthUsecase) Signup(email string, username string, password string) (*o
 	claims := jwt.CreateClaims(userID.String(), duration, username)
 	tokenString, err := jwt.IssueJWT(claims, config.Service.Authentication.JwtSecret)
 	if err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 
@@ -58,13 +62,16 @@ func (au AuthUsecase) Signup(email string, username string, password string) (*o
 func (au AuthUsecase) Login(email string, password string) (*openapi.SuccessLoginRes, string, error) {
 	user, err := au.q.User.Where(au.q.User.Email.Eq(email)).First()
 	if err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 	hashedPassword, err := cipher.GenHash(password)
 	if err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 	if err := cipher.Compare(user.PasswordHash, hashedPassword); err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 
@@ -73,6 +80,7 @@ func (au AuthUsecase) Login(email string, password string) (*openapi.SuccessLogi
 	claims := jwt.CreateClaims(user.ID, duration, user.Username)
 	tokenString, err := jwt.IssueJWT(claims, config.Service.Authentication.JwtSecret)
 	if err != nil {
+		log.Println(err)
 		return nil, "", err
 	}
 
