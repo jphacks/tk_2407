@@ -16,7 +16,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: setup golang
+      - uses: actions/setup-go@v5
         name: Setup Go
         with:
           go-version: 1.23
@@ -34,5 +34,5 @@ jobs:
           cache-dependency-path: './frontend/pnpm-lock.yaml'
       - name: run openapi build
         run: make gen
-      - check diff
+      - name: check diff
         run: git diff --exit-code
