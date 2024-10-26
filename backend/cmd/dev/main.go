@@ -4,15 +4,19 @@ import (
 	"backend/pkg/settings"
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
+	"backend/svc/pkg/query"
+	"backend/svc/pkg/usecase"
 	"database/sql"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"gorm.io/driver/postgres"
 )
 
 func main() {
@@ -37,13 +41,12 @@ func main() {
 		log.Fatalf("invalid protocol: %s", conf.Infrastructure.Postgres.Protocol)
 	}
 
+	// ping db
 	db, err := sql.Open("postgres", dbUrl)
 	if err != nil {
 		log.Fatalf("failed to open db: %v", err)
 		return
 	}
-
-	// ping db
 	if err := db.Ping(); err != nil {
 		log.Fatalf("failed to ping db: %v", err)
 		return
@@ -66,10 +69,17 @@ func main() {
 		log.Println("Migration done.")
 	}
 
+	gormDB, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("failed to connect to database, err: %v", err)
+	}
+
+	q := query.Use(gormDB, nil)
+
 	// Implement Application API
 	apiV1 := engine.Group("/api/v1")
 	middleware.NewCORS().ConfigureCORS(apiV1)
-	if err := Implement(apiV1); err != nil {
+	if err := Implement(apiV1, q); err != nil {
 		log.Fatalf("Failed to start server... %v", err)
 		return
 	}
@@ -81,7 +91,13 @@ func main() {
 }
 
 // Implement APIのルーティングをするところ
-func Implement(rg *gin.RouterGroup) error {
+func Implement(rg *gin.RouterGroup, q *query.Query) error {
 	rg.GET("/health", handler.NewHealthHandler().Handle)
+
+	userUsecase := usecase.NewUserUsecase(q)
+	userHandler := handler.NewUserHandler(userUsecase)
+
+	rg.GET("/user/:userId", userHandler.GetUser())
+
 	return nil
 }
