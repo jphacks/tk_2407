@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Component({
+export function CustomPin({
   imageUrl,
   size = 100,
 }: {
