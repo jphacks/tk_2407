@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
+    "api:build": "rm -rf src/api && openapi2aspida -i ../openapi/openapi.yaml -o ./src/api",
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
+    "openapi2aspida": "^0.24.0",
     "postcss": "^8",
     "prettier": "3.3.3",
     "tailwindcss": "^3.4.14",
