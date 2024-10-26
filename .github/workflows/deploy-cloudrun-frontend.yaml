@@ -41,12 +41,14 @@ jobs:
           registry: asia-northeast1-docker.pkg.dev
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           tags: asia-northeast1-docker.pkg.dev/jphacks-bakery/main/frontend:latest
           context: ./frontend
           file: ./frontend/Dockerfile
+          build-args: |
+            NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.FRONTEND_GOOGLE_MAPS_API_KEY }}
 
       - name: Download Cloud Run Service YAML
         run: |

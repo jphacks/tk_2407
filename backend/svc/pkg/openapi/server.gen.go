@@ -17,9 +17,15 @@ type ServerInterface interface {
 	// (GET /api/v1/health)
 	GetApiV1Health(c *gin.Context)
 
+	// (POST /api/v1/login)
+	PostApiV1Login(c *gin.Context)
+
 	// (GET /api/v1/messages/{locationId})
 	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
 
+	// (POST /api/v1/signup)
+	PostApiV1Signup(c *gin.Context)
+	// Retrieve a list of locations
 	// (GET /api/v1/spots)
 	GetApiV1Spots(c *gin.Context, params GetApiV1SpotsParams)
 
@@ -49,6 +55,19 @@ func (siw *ServerInterfaceWrapper) GetApiV1Health(c *gin.Context) {
 	siw.Handler.GetApiV1Health(c)
 }
 
+// PostApiV1Login operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1Login(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1Login(c)
+}
+
 // GetApiV1MessagesLocationId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 
@@ -71,6 +90,19 @@ func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 	}
 
 	siw.Handler.GetApiV1MessagesLocationId(c, locationId)
+}
+
+// PostApiV1Signup operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1Signup(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1Signup(c)
 }
 
 // GetApiV1Spots operation middleware
@@ -173,7 +205,9 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/api/v1/health", wrapper.GetApiV1Health)
+	router.POST(options.BaseURL+"/api/v1/login", wrapper.PostApiV1Login)
 	router.GET(options.BaseURL+"/api/v1/messages/:locationId", wrapper.GetApiV1MessagesLocationId)
+	router.POST(options.BaseURL+"/api/v1/signup", wrapper.PostApiV1Signup)
 	router.GET(options.BaseURL+"/api/v1/spots", wrapper.GetApiV1Spots)
 	router.GET(options.BaseURL+"/api/v1/user/:userId", wrapper.GetApiV1UserUserId)
 }

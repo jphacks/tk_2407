@@ -21,6 +21,11 @@ type SuccessLocationRes struct {
 	} `json:"spots"`
 }
 
+// SuccessLoginRes defines model for SuccessLoginRes.
+type SuccessLoginRes struct {
+	UserId string `json:"userId"`
+}
+
 // SuccessMessageRes defines model for SuccessMessageRes.
 type SuccessMessageRes struct {
 	Messages []struct {
@@ -34,9 +39,27 @@ type SuccessMessageRes struct {
 	} `json:"messages"`
 }
 
+// SuccessSignupRes defines model for SuccessSignupRes.
+type SuccessSignupRes struct {
+	UserId string `json:"userId"`
+}
+
 // SuccessUserRes defines model for SuccessUserRes.
 type SuccessUserRes struct {
 	Email    string `json:"email"`
+	Username string `json:"username"`
+}
+
+// PostApiV1LoginJSONBody defines parameters for PostApiV1Login.
+type PostApiV1LoginJSONBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// PostApiV1SignupJSONBody defines parameters for PostApiV1Signup.
+type PostApiV1SignupJSONBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 	Username string `json:"username"`
 }
 
@@ -48,3 +71,9 @@ type GetApiV1SpotsParams struct {
 	// Latitude The latitude of the location.
 	Latitude float32 `form:"latitude" json:"latitude"`
 }
+
+// PostApiV1LoginJSONRequestBody defines body for PostApiV1Login for application/json ContentType.
+type PostApiV1LoginJSONRequestBody PostApiV1LoginJSONBody
+
+// PostApiV1SignupJSONRequestBody defines body for PostApiV1Signup for application/json ContentType.
+type PostApiV1SignupJSONRequestBody PostApiV1SignupJSONBody
