@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import Link from 'next/link'
+import Image from 'next/image'
 import apiClient from '@/apiClient'
 
 const formSchema = z.object({
@@ -57,7 +58,12 @@ function LoginPage() {
       <div className="flex flex-col items-center">
         <Card className="w-[600px]">
           <div className="my-4 flex flex-col items-center ">
-            <img src="tsumugi.png" width={128} height={128} alt="" />
+            <Image
+              src="/tsumugi.png"
+              width={128}
+              height={128}
+              alt="つむぎ ロゴ"
+            />
           </div>
           <CardContent>
             <Form {...form}>
