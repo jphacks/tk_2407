@@ -76,23 +76,45 @@ components:
               content:
                 type: string
                 description: Message content
-              stamp:
-                type: string
-                description: Message stamp
+              stamps:
+                type: object
+                description: Message stamps
+                additionalProperties:
+                  type: object
+                  properties:
+                    count:
+                      type: integer
+                      description: Stamp count
+                    is_reacted:
+                      type: boolean
+                      description: Check if the user has stamped
+
       example:
         messages:
           - id: 1
             author: "田中さくら"
             content: "桜の季節が来ました！公園で花見をするのが楽しみです。みんなでピクニックしましょう！"
-            stamp: ""
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
+              heart:
+                count: 3
+                is_reacted: false
           - id: 2
             author: "佐藤健太"
             content: "今朝、公園でジョギングしていたら、きれいな朝日を見ました。心が洗われる思いでした。"
-            stamp: ""
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
           - id: 3
             author: "鈴木美咲"
             content: "子供たちと遊具で遊んだ後、芝生の上でお弁当。休日の過ごし方として最高です！"
-            stamp: ""
+            stamps:
+              smile:
+                count: 5
+                is_reacted: true
     ErrorRes:
       type: object
       required:
