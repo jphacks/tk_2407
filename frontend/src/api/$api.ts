@@ -1,19 +1,34 @@
 import type { AspidaClient, BasicHeaders } from 'aspida';
+import type { Methods as Methods_6l8fl5 } from './api/v1/health';
 import type { Methods as Methods_1hjgtff } from './api/v1/messages/_location_id@string';
-import type { Methods as Methods_18qsrps } from './health';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   const prefix = (baseURL === undefined ? '' : baseURL).replace(/\/$/, '');
-  const PATH0 = '/api/v1/messages';
-  const PATH1 = '/health';
+  const PATH0 = '/api/v1/health';
+  const PATH1 = '/api/v1/messages';
   const GET = 'GET';
 
   return {
     api: {
       v1: {
+        health: {
+          /**
+           * health check
+           * @returns OK
+           */
+          get: (option?: { config?: T | undefined } | undefined) =>
+            fetch<Methods_6l8fl5['get']['resBody'], BasicHeaders, Methods_6l8fl5['get']['status']>(prefix, PATH0, GET, option).json(),
+          /**
+           * health check
+           * @returns OK
+           */
+          $get: (option?: { config?: T | undefined } | undefined) =>
+            fetch<Methods_6l8fl5['get']['resBody'], BasicHeaders, Methods_6l8fl5['get']['status']>(prefix, PATH0, GET, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH0}`,
+        },
         messages: {
           _location_id: (val3: string) => {
-            const prefix3 = `${PATH0}/${val3}`;
+            const prefix3 = `${PATH1}/${val3}`;
 
             return {
               /**
@@ -33,21 +48,6 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
           },
         },
       },
-    },
-    health: {
-      /**
-       * health check
-       * @returns OK
-       */
-      get: (option?: { config?: T | undefined } | undefined) =>
-        fetch<Methods_18qsrps['get']['resBody'], BasicHeaders, Methods_18qsrps['get']['status']>(prefix, PATH1, GET, option).json(),
-      /**
-       * health check
-       * @returns OK
-       */
-      $get: (option?: { config?: T | undefined } | undefined) =>
-        fetch<Methods_18qsrps['get']['resBody'], BasicHeaders, Methods_18qsrps['get']['status']>(prefix, PATH1, GET, option).json().then(r => r.body),
-      $path: () => `${prefix}${PATH1}`,
     },
   };
 };
