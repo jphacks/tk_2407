@@ -9,8 +9,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
@@ -96,8 +97,12 @@ func Implement(rg *gin.RouterGroup, q *query.Query) error {
 
 	userUsecase := usecase.NewUserUsecase(q)
 	userHandler := handler.NewUserHandler(userUsecase)
+	authUsecase := usecase.NewAuthUsecase(q)
+	authHandler := handler.NewAuthHandler(authUsecase)
 
 	rg.GET("/user/:userId", userHandler.GetUser())
+	rg.POST("/signup", authHandler.Signup())
+	rg.POST("/login", authHandler.Login())
 
 	return nil
 }
