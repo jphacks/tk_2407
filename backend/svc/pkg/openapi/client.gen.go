@@ -4,6 +4,7 @@
 package openapi
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -91,6 +92,11 @@ type ClientInterface interface {
 	// GetApiV1Health request
 	GetApiV1Health(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostApiV1LoginWithBody request with any body
+	PostApiV1LoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiV1Login(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetApiV1MessagesLocationId request
 	GetApiV1MessagesLocationId(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -103,6 +109,30 @@ type ClientInterface interface {
 
 func (c *Client) GetApiV1Health(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetApiV1HealthRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiV1LoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiV1LoginRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiV1Login(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiV1LoginRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -172,6 +202,46 @@ func NewGetApiV1HealthRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPostApiV1LoginRequest calls the generic PostApiV1Login builder with application/json body
+func NewPostApiV1LoginRequest(server string, body PostApiV1LoginJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiV1LoginRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiV1LoginRequestWithBody generates requests for PostApiV1Login with any type of body
+func NewPostApiV1LoginRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/login")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -347,6 +417,11 @@ type ClientWithResponsesInterface interface {
 	// GetApiV1HealthWithResponse request
 	GetApiV1HealthWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1HealthResponse, error)
 
+	// PostApiV1LoginWithBodyWithResponse request with any body
+	PostApiV1LoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiV1LoginResponse, error)
+
+	PostApiV1LoginWithResponse(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1LoginResponse, error)
+
 	// GetApiV1MessagesLocationIdWithResponse request
 	GetApiV1MessagesLocationIdWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*GetApiV1MessagesLocationIdResponse, error)
 
@@ -373,6 +448,28 @@ func (r GetApiV1HealthResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetApiV1HealthResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiV1LoginResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *SuccessLoginRes
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiV1LoginResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiV1LoginResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -454,6 +551,23 @@ func (c *ClientWithResponses) GetApiV1HealthWithResponse(ctx context.Context, re
 	return ParseGetApiV1HealthResponse(rsp)
 }
 
+// PostApiV1LoginWithBodyWithResponse request with arbitrary body returning *PostApiV1LoginResponse
+func (c *ClientWithResponses) PostApiV1LoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiV1LoginResponse, error) {
+	rsp, err := c.PostApiV1LoginWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiV1LoginResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiV1LoginWithResponse(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1LoginResponse, error) {
+	rsp, err := c.PostApiV1Login(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiV1LoginResponse(rsp)
+}
+
 // GetApiV1MessagesLocationIdWithResponse request returning *GetApiV1MessagesLocationIdResponse
 func (c *ClientWithResponses) GetApiV1MessagesLocationIdWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*GetApiV1MessagesLocationIdResponse, error) {
 	rsp, err := c.GetApiV1MessagesLocationId(ctx, locationId, reqEditors...)
@@ -501,6 +615,32 @@ func ParseGetApiV1HealthResponse(rsp *http.Response) (*GetApiV1HealthResponse, e
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostApiV1LoginResponse parses an HTTP response from a PostApiV1LoginWithResponse call
+func ParsePostApiV1LoginResponse(rsp *http.Response) (*PostApiV1LoginResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiV1LoginResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest SuccessLoginRes
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
 
 	}
 

@@ -3,7 +3,7 @@ import type { DefineMethods } from 'aspida';
 import type * as Types from '../../../../@types';
 
 export type Methods = DefineMethods<{
-  /** get user */
+  /** Get By ID */
   get: {
     status: 200;
     /** OK */
