@@ -46,10 +46,6 @@ func main() {
 		}
 	}
 
-	// Health Check
-	h := handler.NewHealthHandler()
-	engine.GET("/health", h.Handle)
-
 	// Implement Application API
 	apiV1 := engine.Group("/api/v1")
 	middleware.NewCORS().ConfigureCORS(apiV1)
@@ -66,5 +62,6 @@ func main() {
 
 // Implement APIのルーティングをするところ
 func Implement(rg *gin.RouterGroup) error {
+	rg.GET("/health", handler.NewHealthHandler().Handle)
 	return nil
 }

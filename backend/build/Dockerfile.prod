@@ -13,5 +13,5 @@ RUN go build -o /app/main ./cmd/dev
 FROM alpine:3.20
 WORKDIR /app
 COPY --from=builder /app/main /app/main
-COPY --from=builder /app/backend/migrate/migrations /app/migrations
+COPY --from=builder /app/migrate/migrations /app/migrations
 CMD ["/app/main"]
