@@ -108,6 +108,35 @@ paths:
                 application/json:
                   schema:
                       $ref: "#/components/schemas/SuccessLoginRes"
+  /api/v1/signup:
+    post:
+      tags:
+        - auth
+      description: Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - username
+                - password
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessSignupRes"
 
 components:
   responses:
@@ -249,7 +278,11 @@ components:
         email: "johndoe@example.com"
     SuccessLoginRes:
       properties:
-        message:
+        userId:
+          type: string
+    SuccessSignupRes:
+      properties:
+        userId:
           type: string
     ErrorRes:
       type: object
