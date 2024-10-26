@@ -1,0 +1,38 @@
+name: Build OpenAPI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    directory:
+      - .github/workflows/build-openapi.yaml
+      - openapi/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: setup golang
+        name: Setup Go
+        with:
+          go-version: 1.23
+          cache-dependency-path: |
+            backend/go.sum
+      - uses: pnpm/action-setup@v4
+        name: Setup pnpm
+        with:
+          version: 9
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: './frontend/pnpm-lock.yaml'
+      - name: run openapi build
+        run: make gen
+      - check diff
+        run: git diff --exit-code
