@@ -35,6 +35,14 @@ export type SuccessUserRes = {
   email: string;
 }
 
+export type SuccessLoginRes = {
+  userId: string;
+}
+
+export type SuccessSignupRes = {
+  userId: string;
+}
+
 export type ErrorRes = {
   message: string;
 }

@@ -26,11 +26,13 @@ func (uh UserHandler) GetUser() gin.HandlerFunc {
 		userID := c.Param("userId")
 		if len(userID) == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "user id is necessary"})
+			c.Abort()
 			return
 		}
 		user, err := uh.uu.GetByID(userID)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to get user"})
+			c.Abort()
 			return
 		}
 

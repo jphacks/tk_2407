@@ -5,7 +5,9 @@ info:
 paths:
   /api/v1/health:
     get:
-      description: health check
+      tags:
+        - health
+      description: Health check
       responses:
         '200':
           description: OK
@@ -15,7 +17,9 @@ paths:
                 $ref: "#/components/schemas/HealthRes"
   /api/v1/messages/{locationId}:
     get:
-      description: get message list
+      tags:
+        - messages
+      description: Get message list
       parameters:
       - name: locationId
         in: path
@@ -32,6 +36,9 @@ paths:
                 $ref: "#/components/schemas/SuccessMessageRes"
   /api/v1/spots:
     get:
+      tags:
+        - spots
+      summary: Retrieve a list of locations
       description: Retrieve a list of locations based on longitude, latitude
       parameters:
         - name: longitude
@@ -57,7 +64,9 @@ paths:
                 $ref: "#/components/schemas/SuccessLocationRes"
   /api/v1/user/{userId}:
     get:
-      description: get user
+      tags:
+        - user
+      description: Get By ID
       parameters:
       - name: userId
         in: path
@@ -72,6 +81,62 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
+
+  /api/v1/login:
+    post:
+      tags:
+        - auth
+      description: Login
+      requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      password:
+                        type: string
+                    required:
+                      - email
+                      - password
+      responses:
+        '201':
+            description: Created
+            content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/SuccessLoginRes"
+  /api/v1/signup:
+    post:
+      tags:
+        - auth
+      description: Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - username
+                - password
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessSignupRes"
 
 components:
   responses:
@@ -211,6 +276,16 @@ components:
       example:
         username: "johndoe"
         email: "johndoe@example.com"
+    SuccessLoginRes:
+      properties:
+        userId:
+          type: string
+      required: [userId]
+    SuccessSignupRes:
+      properties:
+        userId:
+          type: string
+      required: [userId]
     ErrorRes:
       type: object
       required:
