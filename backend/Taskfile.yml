@@ -18,7 +18,7 @@ tasks:
       - docker compose run --rm migrate migrate -path /migrate/migrations -database "postgresql://user:password@db:5432/yosegaki?sslmode=disable" up 1
   migrate-down:
     cmds:
-      - docker compse run --rm migrate migrate -path /migrate/migrations -database "postgresql://user:password@db:5432/yosegaki?sslmode=disable" down 1
+      - docker compose run --rm migrate migrate -path /migrate/migrations -database "postgresql://user:password@db:5432/yosegaki?sslmode=disable" down 1
   migrate-create:
     vars:
       name: "{{.NAME}}"
