@@ -11,13 +11,14 @@ type HealthRes struct {
 // SuccessLocationRes defines model for SuccessLocationRes.
 type SuccessLocationRes struct {
 	Spots *[]struct {
-		Description      string  `json:"description"`
-		GoogleMapPlaceId string  `json:"google_map_place_id"`
-		Latitude         float32 `json:"latitude"`
-		Longitude        float32 `json:"longitude"`
-		Name             string  `json:"name"`
-		PhotoUrl         string  `json:"photo_url"`
-		SpotId           string  `json:"spot_id"`
+		Address          string   `json:"address"`
+		GoogleMapPlaceId string   `json:"google_map_place_id"`
+		Latitude         float32  `json:"latitude"`
+		Longitude        float32  `json:"longitude"`
+		Name             string   `json:"name"`
+		PhotoUrl         string   `json:"photo_url"`
+		SpotId           string   `json:"spot_id"`
+		Types            []string `json:"types"`
 	} `json:"spots"`
 }
 

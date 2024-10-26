@@ -105,6 +105,9 @@ type ClientInterface interface {
 
 	PostApiV1Signup(ctx context.Context, body PostApiV1SignupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetApiV1SpotSpotIdPhoto request
+	GetApiV1SpotSpotIdPhoto(ctx context.Context, spotId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetApiV1Spots request
 	GetApiV1Spots(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -174,6 +177,18 @@ func (c *Client) PostApiV1SignupWithBody(ctx context.Context, contentType string
 
 func (c *Client) PostApiV1Signup(ctx context.Context, body PostApiV1SignupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostApiV1SignupRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiV1SpotSpotIdPhoto(ctx context.Context, spotId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiV1SpotSpotIdPhotoRequest(c.Server, spotId)
 	if err != nil {
 		return nil, err
 	}
@@ -349,6 +364,40 @@ func NewPostApiV1SignupRequestWithBody(server string, contentType string, body i
 	return req, nil
 }
 
+// NewGetApiV1SpotSpotIdPhotoRequest generates requests for GetApiV1SpotSpotIdPhoto
+func NewGetApiV1SpotSpotIdPhotoRequest(server string, spotId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "spotId", runtime.ParamLocationPath, spotId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/spot/%s/photo", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetApiV1SpotsRequest generates requests for GetApiV1Spots
 func NewGetApiV1SpotsRequest(server string, params *GetApiV1SpotsParams) (*http.Request, error) {
 	var err error
@@ -499,6 +548,9 @@ type ClientWithResponsesInterface interface {
 
 	PostApiV1SignupWithResponse(ctx context.Context, body PostApiV1SignupJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1SignupResponse, error)
 
+	// GetApiV1SpotSpotIdPhotoWithResponse request
+	GetApiV1SpotSpotIdPhotoWithResponse(ctx context.Context, spotId string, reqEditors ...RequestEditorFn) (*GetApiV1SpotSpotIdPhotoResponse, error)
+
 	// GetApiV1SpotsWithResponse request
 	GetApiV1SpotsWithResponse(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*GetApiV1SpotsResponse, error)
 
@@ -588,6 +640,27 @@ func (r PostApiV1SignupResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostApiV1SignupResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetApiV1SpotSpotIdPhotoResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiV1SpotSpotIdPhotoResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiV1SpotSpotIdPhotoResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -688,6 +761,15 @@ func (c *ClientWithResponses) PostApiV1SignupWithResponse(ctx context.Context, b
 		return nil, err
 	}
 	return ParsePostApiV1SignupResponse(rsp)
+}
+
+// GetApiV1SpotSpotIdPhotoWithResponse request returning *GetApiV1SpotSpotIdPhotoResponse
+func (c *ClientWithResponses) GetApiV1SpotSpotIdPhotoWithResponse(ctx context.Context, spotId string, reqEditors ...RequestEditorFn) (*GetApiV1SpotSpotIdPhotoResponse, error) {
+	rsp, err := c.GetApiV1SpotSpotIdPhoto(ctx, spotId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiV1SpotSpotIdPhotoResponse(rsp)
 }
 
 // GetApiV1SpotsWithResponse request returning *GetApiV1SpotsResponse
@@ -807,6 +889,22 @@ func ParsePostApiV1SignupResponse(rsp *http.Response) (*PostApiV1SignupResponse,
 		}
 		response.JSON201 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseGetApiV1SpotSpotIdPhotoResponse parses an HTTP response from a GetApiV1SpotSpotIdPhotoWithResponse call
+func ParseGetApiV1SpotSpotIdPhotoResponse(rsp *http.Response) (*GetApiV1SpotSpotIdPhotoResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiV1SpotSpotIdPhotoResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil

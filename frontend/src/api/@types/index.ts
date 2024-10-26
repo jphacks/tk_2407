@@ -23,10 +23,11 @@ export type SuccessLocationRes = {
     spot_id: string;
     google_map_place_id: string;
     name: string;
-    description: string;
-    photo_url: string;
     latitude: number;
     longitude: number;
+    address: string;
+    types: string[];
+    photo_url: string;
   }[] | null | undefined;
 }
 
