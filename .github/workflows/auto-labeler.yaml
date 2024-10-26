@@ -10,10 +10,9 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-    - id: label-the-PR
-      uses: actions/labeler@v5
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/labeler@v5
+        with:
+          sync-labels: true
   check-for-conflicts:
     runs-on: ubuntu-latest
     steps:
