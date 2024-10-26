@@ -3,7 +3,7 @@ info:
   title: Health Check API
   version: "1.0.0"
 paths:
-  /health:
+  /api/v1/health:
     get:
       description: health check
       responses:
