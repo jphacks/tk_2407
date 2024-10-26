@@ -1,6 +1,4 @@
-FROM golang:1.23.2-alpine
-
-RUN go install github.com/air-verse/air@latest
+FROM golang:1.23.2-alpine as builder
 
 ## assume secret is mounted on /secrets
 ENV ENV_LOCATION=/secrets/settings.yaml
@@ -10,5 +8,10 @@ WORKDIR /app
 COPY . .
 
 RUN go mod download
+RUN go build -o /app/main ./cmd/dev
 
-CMD ["air", "-c", ".air.toml"]
+FROM alpine:3.20
+WORKDIR /app
+COPY --from=builder /app/main /app/main
+COPY --from=builder /app/backend/migrate/migrations /app/migrations
+CMD ["/app/main"]
