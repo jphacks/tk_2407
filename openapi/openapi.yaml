@@ -75,29 +75,23 @@ components:
             type: object
             properties:
               id:
-                type: string
-                description: Message ID
+                type: string  # メッセージ ID
               author_name:
-                type: string
-                description: Author of the message
+                type: string  # メッセージの著者名
               content:
-                type: string
-                description: Message content
+                type: string  # メッセージの内容
               stamps:
                 type: object
-                description: Message stamps
-                nullable: true
                 additionalProperties:
                   type: object
                   properties:
                     count:
-                      type: integer
-                      description: Stamp count
+                      type: integer  # スタンプのカウント
                     is_reacted:
-                      type: boolean
-                      description: Check if the user has stamped
-      required:
-        - messages
+                      type: boolean  # ユーザーがスタンプを押したかどうか
+                nullable: true  # stamps は null 許容
+            required: [id, author_name, content, stamps]  # messages 配列内の必須フィールド
+      required: [messages]  # SuccessMessageRes の必須フィールド
 
       example:
         messages:

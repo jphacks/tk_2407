@@ -5,22 +5,16 @@ export type HealthRes = {
 
 export type SuccessMessageRes = {
   messages: {
-    /** Message ID */
-    id?: string | undefined;
-    /** Author of the message */
-    author_name?: string | undefined;
-    /** Message content */
-    content?: string | undefined;
+    id: string;
+    author_name: string;
+    content: string;
 
-    /** Message stamps */
-    stamps?: {
+    stamps: {
       [key: string]: {
-        /** Stamp count */
         count?: number | undefined;
-        /** Check if the user has stamped */
         is_reacted?: boolean | undefined;
       };
-    } | null | undefined;
+    } | null;
   }[];
 }
 
