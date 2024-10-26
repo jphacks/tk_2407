@@ -1,8 +1,6 @@
 FROM golang:1.23.2-alpine as builder
 
 ## assume secret is mounted on /secrets
-ENV ENV_LOCATION=/secrets/settings.yaml
-
 WORKDIR /app
 
 COPY . .
@@ -11,6 +9,7 @@ RUN go mod download
 RUN go build -o /app/main ./cmd/dev
 
 FROM alpine:3.20
+ENV ENV_LOCATION=/secrets/settings.yaml
 WORKDIR /app
 COPY --from=builder /app/main /app/main
 COPY --from=builder /app/migrate/migrations /app/migrations
