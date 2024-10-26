@@ -89,8 +89,9 @@ components:
                       type: integer  # スタンプのカウント
                     is_reacted:
                       type: boolean  # ユーザーがスタンプを押したかどうか
-                nullable: true  # stamps は null 許容
-            required: [id, author_name, content, stamps]  # messages 配列内の必須フィールド
+                  required: [count,is_reacted]
+                nullable: true
+            required: [id, author_name, content]  # messages 配列内の必須フィールド
       required: [messages]  # SuccessMessageRes の必須フィールド
 
       example:

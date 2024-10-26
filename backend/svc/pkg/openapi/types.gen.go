@@ -15,8 +15,8 @@ type SuccessMessageRes struct {
 		Content    string `json:"content"`
 		Id         string `json:"id"`
 		Stamps     *map[string]struct {
-			Count     *int  `json:"count,omitempty"`
-			IsReacted *bool `json:"is_reacted,omitempty"`
+			Count     int  `json:"count"`
+			IsReacted bool `json:"is_reacted"`
 		} `json:"stamps"`
 	} `json:"messages"`
 }

@@ -9,12 +9,12 @@ export type SuccessMessageRes = {
     author_name: string;
     content: string;
 
-    stamps: {
+    stamps?: {
       [key: string]: {
-        count?: number | undefined;
-        is_reacted?: boolean | undefined;
+        count: number;
+        is_reacted: boolean;
       };
-    } | null;
+    } | null | undefined;
   }[];
 }
 
