@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -180,10 +179,7 @@ type ClientWithResponsesInterface interface {
 type GetHealthResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *struct {
-		Status    *string    `json:"status,omitempty"`
-		Timestamp *time.Time `json:"timestamp,omitempty"`
-	}
+	JSON200      *HealthRes
 }
 
 // Status returns HTTPResponse.Status
@@ -226,10 +222,7 @@ func ParseGetHealthResponse(rsp *http.Response) (*GetHealthResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Status    *string    `json:"status,omitempty"`
-			Timestamp *time.Time `json:"timestamp,omitempty"`
-		}
+		var dest HealthRes
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
