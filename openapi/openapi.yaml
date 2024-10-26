@@ -13,9 +13,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
-  /api/v1/messages:
+  /api/v1/messages/{location_id}:
     get:
       description: get message list
+      parameters:
+      - name: location_id
+        in: path
+        required: true
+        description: The ID of the location to get messages for
+        schema:
+          type: string
       responses:
         '200':
           description: OK
@@ -79,7 +86,7 @@ components:
               stamps:
                 type: object
                 description: Message stamps
-                nullable: true 
+                nullable: true
                 additionalProperties:
                   type: object
                   properties:
@@ -90,7 +97,7 @@ components:
                       type: boolean
                       description: Check if the user has stamped
       required:
-        - messages 
+        - messages
 
       example:
         messages:
