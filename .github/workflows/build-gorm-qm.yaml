@@ -6,9 +6,9 @@ on:
   pull_request:
     branches:
       - main
-    directory:
+    paths:
       - .github/workflows/build-gorm-qm.yaml
-      - 'backend/db/migrations/*.sql'
+      - "backend/db/migrations/*.sql"
 jobs:
   build:
     runs-on: ubuntu-latest
