@@ -30,6 +30,11 @@ export type SuccessLocationRes = {
   }[] | null | undefined;
 }
 
+export type SuccessUserRes = {
+  username: string;
+  email: string;
+}
+
 export type ErrorRes = {
   message: string;
 }

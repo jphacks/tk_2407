@@ -13,11 +13,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
-  /api/v1/messages/{location_id}:
+  /api/v1/messages/{locationId}:
     get:
       description: get message list
       parameters:
-      - name: location_id
+      - name: locationId
         in: path
         required: true
         description: The ID of the location to get messages for
@@ -55,6 +55,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessLocationRes"
+  /api/v1/user/{userId}:
+    get:
+      description: get user
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: The ID of user
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessUserRes"
 
 components:
   responses:
@@ -184,8 +201,16 @@ components:
             description: "A museum showcasing local history and artifacts."
             latitude: 35.6896
             longitude: 139.6920
-
-
+    SuccessUserRes:
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+      required: [username,email]
+      example:
+        username: "johndoe"
+        email: "johndoe@example.com"
     ErrorRes:
       type: object
       required:
