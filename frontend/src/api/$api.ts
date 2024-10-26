@@ -9,14 +9,14 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   return {
     health: {
       /**
-       * Returns the health status of the application in JSON format.
-       * @returns OK - Service is healthy
+       * health check
+       * @returns OK
        */
       get: (option?: { config?: T | undefined } | undefined) =>
         fetch<Methods_18qsrps['get']['resBody'], BasicHeaders, Methods_18qsrps['get']['status']>(prefix, PATH0, GET, option).json(),
       /**
-       * Returns the health status of the application in JSON format.
-       * @returns OK - Service is healthy
+       * health check
+       * @returns OK
        */
       $get: (option?: { config?: T | undefined } | undefined) =>
         fetch<Methods_18qsrps['get']['resBody'], BasicHeaders, Methods_18qsrps['get']['status']>(prefix, PATH0, GET, option).json().then(r => r.body),

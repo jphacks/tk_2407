@@ -9,7 +9,7 @@ import (
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-	// Health check endpoint
+
 	// (GET /health)
 	GetHealth(c *gin.Context)
 }
