@@ -4,6 +4,7 @@ import (
 	"backend/pkg/settings"
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
+	"database/sql"
 	"errors"
 	"fmt"
 	"log"
@@ -20,7 +21,7 @@ func main() {
 	var dbUrl string
 	switch conf.Infrastructure.Postgres.Protocol {
 	case "tcp":
-		dbUrl = fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+		dbUrl = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 			conf.Infrastructure.Postgres.User,
 			conf.Infrastructure.Postgres.Password,
 			conf.Infrastructure.Postgres.Host,
@@ -34,6 +35,18 @@ func main() {
 			conf.Infrastructure.Postgres.UnixSocket)
 	default:
 		log.Fatalf("invalid protocol: %s", conf.Infrastructure.Postgres.Protocol)
+	}
+
+	db, err := sql.Open("postgres", dbUrl)
+	if err != nil {
+		log.Fatalf("failed to open db: %v", err)
+		return
+	}
+
+	// ping db
+	if err := db.Ping(); err != nil {
+		log.Fatalf("failed to ping db: %v", err)
+		return
 	}
 
 	if conf.Application.Server.OnProduction {
