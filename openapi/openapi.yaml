@@ -30,6 +30,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessMessageRes"
+  /api/v1/spots:
+    get:
+      description: Retrieve a list of locations based on longitude, latitude, and radius.
+      parameters:
+        - name: longitude
+          in: query
+          required: true
+          description: The longitude of the location.
+          schema:
+            type: number
+            format: float
+        - name: latitude
+          in: query
+          required: true
+          description: The latitude of the location.
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLocationRes"
 
 components:
   responses:
@@ -120,6 +145,31 @@ components:
               smile:
                 count: 5
                 is_reacted: true
+    SuccessLocationRes:
+      type: object
+      properties:
+        spots:
+          nullable: true
+          type: array
+          items:
+            type: object
+            properties:
+              spot_id:
+                type: string
+              google_map_place_id:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+              latitude:
+                type: number
+                format: float
+              longitude:
+                type: number
+                format: float
+            required: [spot_id,google_map_place_id,name,description,latitude,longitude]
+
     ErrorRes:
       type: object
       required:
