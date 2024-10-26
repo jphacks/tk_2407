@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: Health Check API
+  version: "1.0.0"
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the application in JSON format.
+      responses:
+        '200':
+          description: OK - Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-10-26T14:00:00Z"
