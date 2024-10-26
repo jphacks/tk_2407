@@ -1,0 +1,1 @@
+export { initMocks } from './setup'
