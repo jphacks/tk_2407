@@ -1,4 +1,4 @@
-name: Auto label PRs with merge conflicts
+name: Auto label PRs
 on:
   - pull_request_target
 jobs:
@@ -11,12 +11,3 @@ jobs:
       - uses: actions/labeler@v5
         with:
           sync-labels: true
-  check-for-conflicts:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: mschilde/auto-label-merge-conflicts@master
-        with:
-          CONFLICT_LABEL_NAME: 'conflict'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAX_RETRIES: 5
-          WAIT_MS: 5000
