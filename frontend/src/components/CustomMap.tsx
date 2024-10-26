@@ -1,6 +1,7 @@
 import { Map, Marker } from '@vis.gl/react-google-maps'
 import { Location } from '@/types/Location'
 import { Circle } from '@/components/Circle'
+import { CustomMarker } from '@/components/CustomMarker'
 
 type CustomMapProps = {
   centerLocation: Location
@@ -18,6 +19,7 @@ export function CustomMap(props: CustomMapProps) {
       defaultZoom={15}
       gestureHandling={'greedy'}
       disableDefaultUI={false}
+      mapId={'b1b1b1b1b1b1b1b1'}
     >
       <Marker
         position={{
@@ -34,6 +36,7 @@ export function CustomMap(props: CustomMapProps) {
         fillColor={'#3b82f6'}
         fillOpacity={0.3}
       />
+      <CustomMarker location={{ latitude: 35.681236, longitude: 139.767125 }} />
     </Map>
   )
 }
