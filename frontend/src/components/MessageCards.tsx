@@ -74,7 +74,7 @@ export const MessageCards: React.FC<MessageCardsProps> = ({ cards }) => {
             <MdOutlineAddReaction />
             {card.stamps?.map((stamp) => (
               <div
-                className={`rounded-full flex gap-1 px-1.5 py-0.5 text-sm ${stamp.is_reacted ? 'bg-blue-400 text-white' : 'bg-gray-100 text-gray-600'}`}
+                className={`rounded-full flex gap-1 px-1.5 py-0.5 text-sm select-none ${stamp.is_reacted ? 'bg-blue-400 text-white' : 'bg-gray-100 text-gray-600'}`}
                 key={stamp.type}
               >
                 <div>{stamp_map[stamp.type as keyof typeof stamp_map]}</div>
