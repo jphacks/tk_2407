@@ -1,7 +1,7 @@
 import { Map, Marker } from '@vis.gl/react-google-maps'
 import { Location } from '@/types/Location'
 import { Circle } from '@/components/Circle'
-import { CustomMarker } from './CustomMarker'
+import { CustomMarker } from '@/components/CustomMarker'
 
 type CustomMapProps = {
   centerLocation: Location
