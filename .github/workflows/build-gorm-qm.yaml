@@ -1,0 +1,36 @@
+name: Build Gorm Query & Model
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    directory:
+      - .github/workflows/build-gorm-qm.yaml
+      - 'backend/db/migrations/*.sql'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        name: Setup Go
+        with:
+          go-version: 1.23
+          cache-dependency-path: |
+            backend/go.sum
+      - name: Setup go-task
+        uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.29.1
+      - name: Run database instance
+        run: task -t ./backend/Taskfile.yml dev-up
+      - name: Execute migrations
+        run: task -t ./backend/Taskfile.yml migrate-up
+      - name: Run gen generation
+        run: task -t ./backend/Taskfile.yml gen-gorm
+      - name: check diff
+        run: git diff --exit-code
