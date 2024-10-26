@@ -106,8 +106,8 @@ paths:
             description: Created
             content:
                 application/json:
-                schema:
-                    $ref: "#/components/schemas/SuccessLoginRes"
+                  schema:
+                      $ref: "#/components/schemas/SuccessLoginRes"
 
 components:
   responses:
