@@ -36,11 +36,11 @@ export type SuccessUserRes = {
 }
 
 export type SuccessLoginRes = {
-  userId?: string | undefined;
+  userId: string;
 }
 
 export type SuccessSignupRes = {
-  userId?: string | undefined;
+  userId: string;
 }
 
 export type ErrorRes = {

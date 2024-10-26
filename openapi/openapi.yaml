@@ -280,10 +280,12 @@ components:
       properties:
         userId:
           type: string
+      required: [userId]
     SuccessSignupRes:
       properties:
         userId:
           type: string
+      required: [userId]
     ErrorRes:
       type: object
       required:

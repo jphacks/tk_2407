@@ -23,7 +23,7 @@ type SuccessLocationRes struct {
 
 // SuccessLoginRes defines model for SuccessLoginRes.
 type SuccessLoginRes struct {
-	UserId *string `json:"userId,omitempty"`
+	UserId string `json:"userId"`
 }
 
 // SuccessMessageRes defines model for SuccessMessageRes.
@@ -41,7 +41,7 @@ type SuccessMessageRes struct {
 
 // SuccessSignupRes defines model for SuccessSignupRes.
 type SuccessSignupRes struct {
-	UserId *string `json:"userId,omitempty"`
+	UserId string `json:"userId"`
 }
 
 // SuccessUserRes defines model for SuccessUserRes.
