@@ -17,29 +17,49 @@ import (
 
 var (
 	Q               = new(Query)
+	Message         *message
+	Reaction        *reaction
 	SchemaMigration *schemaMigration
+	Spot            *spot
+	Stamp           *stamp
 	Test            *test
+	User            *user
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	Message = &Q.Message
+	Reaction = &Q.Reaction
 	SchemaMigration = &Q.SchemaMigration
+	Spot = &Q.Spot
+	Stamp = &Q.Stamp
 	Test = &Q.Test
+	User = &Q.User
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:              db,
+		Message:         newMessage(db, opts...),
+		Reaction:        newReaction(db, opts...),
 		SchemaMigration: newSchemaMigration(db, opts...),
+		Spot:            newSpot(db, opts...),
+		Stamp:           newStamp(db, opts...),
 		Test:            newTest(db, opts...),
+		User:            newUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
+	Message         message
+	Reaction        reaction
 	SchemaMigration schemaMigration
+	Spot            spot
+	Stamp           stamp
 	Test            test
+	User            user
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -47,8 +67,13 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
+		Message:         q.Message.clone(db),
+		Reaction:        q.Reaction.clone(db),
 		SchemaMigration: q.SchemaMigration.clone(db),
+		Spot:            q.Spot.clone(db),
+		Stamp:           q.Stamp.clone(db),
 		Test:            q.Test.clone(db),
+		User:            q.User.clone(db),
 	}
 }
 
@@ -63,20 +88,35 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
+		Message:         q.Message.replaceDB(db),
+		Reaction:        q.Reaction.replaceDB(db),
 		SchemaMigration: q.SchemaMigration.replaceDB(db),
+		Spot:            q.Spot.replaceDB(db),
+		Stamp:           q.Stamp.replaceDB(db),
 		Test:            q.Test.replaceDB(db),
+		User:            q.User.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
+	Message         IMessageDo
+	Reaction        IReactionDo
 	SchemaMigration ISchemaMigrationDo
+	Spot            ISpotDo
+	Stamp           IStampDo
 	Test            ITestDo
+	User            IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
+		Message:         q.Message.WithContext(ctx),
+		Reaction:        q.Reaction.WithContext(ctx),
 		SchemaMigration: q.SchemaMigration.WithContext(ctx),
+		Spot:            q.Spot.WithContext(ctx),
+		Stamp:           q.Stamp.WithContext(ctx),
 		Test:            q.Test.WithContext(ctx),
+		User:            q.User.WithContext(ctx),
 	}
 }
 
