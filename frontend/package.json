@@ -12,6 +12,7 @@
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
+    "@vis.gl/react-google-maps": "^1.3.0",
     "@radix-ui/react-slot": "^1.1.0",
     "aspida": "^1.14.0",
     "class-variance-authority": "^0.7.0",
