@@ -21,22 +21,24 @@ func NewUserHandler(uu *usecase.UserUsecase) *UserHandler {
 }
 
 // GetUser 単体取得
-func (uh UserHandler) GetUser(c *gin.Context) {
-	userID := c.Param("userId")
-	if len(userID) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user id is necessary"})
-		return
-	}
-	user, err := uh.uu.GetByID(userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to get user"})
-		return
-	}
+func (uh UserHandler) GetUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := c.Param("userId")
+		if len(userID) == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "user id is necessary"})
+			return
+		}
+		user, err := uh.uu.GetByID(userID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to get user"})
+			return
+		}
 
-	res := openapi.SuccessUserRes{
-		Email:    user.Email,
-		Username: user.Username,
-	}
+		res := openapi.SuccessUserRes{
+			Email:    user.Email,
+			Username: user.Username,
+		}
 
-	c.JSON(http.StatusOK, res)
+		c.JSON(http.StatusOK, res)
+	}
 }
