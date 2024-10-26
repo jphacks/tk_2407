@@ -10,11 +10,11 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
+	// (GET /api/v1/messages)
+	GetApiV1Messages(c *gin.Context)
+
 	// (GET /health)
 	GetHealth(c *gin.Context)
-
-	// (GET /messages)
-	GetMessages(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -25,6 +25,19 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(c *gin.Context)
+
+// GetApiV1Messages operation middleware
+func (siw *ServerInterfaceWrapper) GetApiV1Messages(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetApiV1Messages(c)
+}
 
 // GetHealth operation middleware
 func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
@@ -37,19 +50,6 @@ func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
 	}
 
 	siw.Handler.GetHealth(c)
-}
-
-// GetMessages operation middleware
-func (siw *ServerInterfaceWrapper) GetMessages(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.GetMessages(c)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -79,6 +79,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
+	router.GET(options.BaseURL+"/api/v1/messages", wrapper.GetApiV1Messages)
 	router.GET(options.BaseURL+"/health", wrapper.GetHealth)
-	router.GET(options.BaseURL+"/messages", wrapper.GetMessages)
 }

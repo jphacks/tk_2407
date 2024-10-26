@@ -13,7 +13,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthRes"
-  /messages:
+  /api/v1/messages:
     get:
       description: get message list
       responses:
@@ -68,9 +68,9 @@ components:
             type: object
             properties:
               id:
-                type: integer
+                type: string
                 description: Message ID
-              author:
+              author_name:
                 type: string
                 description: Author of the message
               content:
@@ -79,6 +79,7 @@ components:
               stamps:
                 type: object
                 description: Message stamps
+                nullable: true 
                 additionalProperties:
                   type: object
                   properties:
@@ -88,6 +89,8 @@ components:
                     is_reacted:
                       type: boolean
                       description: Check if the user has stamped
+      required:
+        - messages 
 
       example:
         messages:

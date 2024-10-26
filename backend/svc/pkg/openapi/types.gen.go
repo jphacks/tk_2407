@@ -10,15 +10,15 @@ type HealthRes struct {
 
 // SuccessMessageRes defines model for SuccessMessageRes.
 type SuccessMessageRes struct {
-	Messages *[]struct {
-		// Author Author of the message
-		Author *string `json:"author,omitempty"`
+	Messages []struct {
+		// AuthorName Author of the message
+		AuthorName *string `json:"author_name,omitempty"`
 
 		// Content Message content
 		Content *string `json:"content,omitempty"`
 
 		// Id Message ID
-		Id *int `json:"id,omitempty"`
+		Id *string `json:"id,omitempty"`
 
 		// Stamps Message stamps
 		Stamps *map[string]struct {
@@ -27,6 +27,6 @@ type SuccessMessageRes struct {
 
 			// IsReacted Check if the user has stamped
 			IsReacted *bool `json:"is_reacted,omitempty"`
-		} `json:"stamps,omitempty"`
-	} `json:"messages,omitempty"`
+		} `json:"stamps"`
+	} `json:"messages"`
 }
