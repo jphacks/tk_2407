@@ -11,9 +11,7 @@ type LocationState =
       error: true
     }
 
-type Options = PositionOptions
-
-export function useCurrentLocation(options: Options = {}): LocationState {
+export function useCurrentLocation(): LocationState {
   const [locationState, setLocation] = useState<LocationState>({
     message: 'something went wrong',
     error: true,
@@ -28,7 +26,7 @@ export function useCurrentLocation(options: Options = {}): LocationState {
       return
     }
 
-    const watcher = navigator.geolocation.watchPosition(
+    const watcherId = navigator.geolocation.watchPosition(
       (position: GeolocationPosition) => {
         setLocation({
           value: {
@@ -44,14 +42,17 @@ export function useCurrentLocation(options: Options = {}): LocationState {
           error: true,
         })
       },
-      options
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+      }
     )
 
     // クリーンアップ関数
     return () => {
-      navigator.geolocation.clearWatch(watcher)
+      navigator.geolocation.clearWatch(watcherId)
     }
-  }, [options])
+  }, [])
 
   return locationState
 }
