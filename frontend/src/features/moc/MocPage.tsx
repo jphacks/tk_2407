@@ -1,10 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { apiClient } from '@/lib/aspida'
 
-import React, {useEffect} from 'react'
-import api from "@/api/$api";
-import aspida from '@aspida/fetch';
+import React, { useEffect } from 'react'
 
 // to Rare-san
 
@@ -15,16 +14,15 @@ import aspida from '@aspida/fetch';
 //      const apiClient = api(aspida(undefined, {baseURL: 'http://localhost:8080/'}))
 // 3. Codeを参考に使い方をみてもらえれば3150
 
-
 export default function MocPage() {
-    const apiClient = api(aspida(undefined, {baseURL: 'http://localhost:8080/'}))
   useEffect(() => {
-      const fechData = async () => {
-          const res = await apiClient.api.v1.health.get()
-          console.log(res)
-      }
-      fechData()
+    const fetchData = async () => {
+      const res = await apiClient.api.v1.health.get()
+      console.log(res)
+    }
+    fetchData()
   }, [])
+
   return (
     <>
       <h1>
