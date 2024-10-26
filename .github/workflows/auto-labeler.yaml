@@ -9,11 +9,11 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
-    with:
-      repo-token: "${{ secrets.GITHUB_TOKEN }}"
     steps:
     - id: label-the-PR
       uses: actions/labeler@v5
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
   check-for-conflicts:
     runs-on: ubuntu-latest
     steps:
