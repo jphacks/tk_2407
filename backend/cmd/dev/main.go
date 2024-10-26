@@ -6,8 +6,10 @@ import (
 	"backend/svc/pkg/middleware"
 	"backend/svc/pkg/query"
 	"backend/svc/pkg/usecase"
+	"database/sql"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +17,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -40,6 +41,17 @@ func main() {
 		log.Fatalf("invalid protocol: %s", conf.Infrastructure.Postgres.Protocol)
 	}
 
+	// ping db
+	db, err := sql.Open("postgres", dbUrl)
+	if err != nil {
+		log.Fatalf("failed to open db: %v", err)
+		return
+	}
+	if err := db.Ping(); err != nil {
+		log.Fatalf("failed to ping db: %v", err)
+		return
+	}
+
 	if conf.Application.Server.OnProduction {
 		log.Println("Running migration...")
 		m, err := migrate.New("file:///app/migrations", dbUrl)
@@ -57,12 +69,12 @@ func main() {
 		log.Println("Migration done.")
 	}
 
-	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
+	gormDB, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect to database, err: %v", err)
 	}
 
-	q := query.Use(db, nil)
+	q := query.Use(gormDB, nil)
 
 	// Implement Application API
 	apiV1 := engine.Group("/api/v1")
