@@ -46,7 +46,7 @@ jobs:
           push: true
           tags: asia-northeast1-docker.pkg.dev/jphacks-bakery/main/backend:latest
           context: ./backend
-          file: ./backend/build/Dockerfile.dev
+          file: ./backend/build/Dockerfile.prod
 
       - name: Download Cloud Run Service YAML
         run: |
