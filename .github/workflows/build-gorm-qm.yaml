@@ -8,7 +8,7 @@ on:
       - main
     paths:
       - .github/workflows/build-gorm-qm.yaml
-      - "backend/db/migrations/*.sql"
+      - "backend/migrate/migrations/*.sql"
 jobs:
   build:
     runs-on: ubuntu-latest
