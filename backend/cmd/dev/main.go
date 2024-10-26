@@ -4,6 +4,7 @@ import (
 	"backend/pkg/settings"
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
+	"errors"
 	"fmt"
 	"log"
 
@@ -43,8 +44,11 @@ func main() {
 			return
 		}
 		if err := m.Up(); err != nil {
-			log.Fatalf("failed to migrate: %v", err)
-			return
+			if !errors.Is(err, migrate.ErrNoChange) {
+				log.Fatalf("failed to migrate: %v", err)
+				return
+			}
+			log.Println("No migration needed.")
 		}
 		log.Println("Migration done.")
 	}
