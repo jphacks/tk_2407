@@ -26,7 +26,7 @@ func main() {
 			conf.Infrastructure.Postgres.Port,
 			conf.Infrastructure.Postgres.DBName)
 	case "unix":
-		dbUrl = fmt.Sprintf("postgresql://%s:%s@unix:%s/%s?sslmode=disable&TimeZone=Asia/Tokyo",
+		dbUrl = fmt.Sprintf("postgresql://%s:%s@%s:5432/%s?sslmode=disable&TimeZone=Asia/Tokyo",
 			conf.Infrastructure.Postgres.User,
 			conf.Infrastructure.Postgres.Password,
 			conf.Infrastructure.Postgres.UnixSocket,
