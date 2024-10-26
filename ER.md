@@ -4,7 +4,7 @@ erDiagram
     users ||--o{ reactions : "reacts"
     messages ||--o{ reactions : "has"
     reactions }o--|| stamps : "uses"
-    locations ||--o{ messages : "has"
+    spots ||--o{ messages : "has"
 
     users {
         ulid id PK
@@ -14,12 +14,13 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-
-    locations {
+    
+    spots {
         ulid id PK
-        string google_map_place_id
         string name
         string description
+        string photo_url
+        string google_map_place_id
         float latitude
         float longitude
         datetime created_at
@@ -29,7 +30,7 @@ erDiagram
     messages {
         ulid id PK
         ulid user_id FK
-        ulid location_id FK
+        ulid spot_id FK
         string photo_url
         string content
         datetime created_at
