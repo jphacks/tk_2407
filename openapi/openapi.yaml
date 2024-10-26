@@ -32,7 +32,7 @@ paths:
                 $ref: "#/components/schemas/SuccessMessageRes"
   /api/v1/spots:
     get:
-      description: Retrieve a list of locations based on longitude, latitude, and radius.
+      description: Retrieve a list of locations based on longitude, latitude
       parameters:
         - name: longitude
           in: query
@@ -118,7 +118,6 @@ components:
                 nullable: true
             required: [id, author_name, content]  # messages 配列内の必須フィールド
       required: [messages]  # SuccessMessageRes の必須フィールド
-
       example:
         messages:
           - id: 1
@@ -162,6 +161,8 @@ components:
                 type: string
               description:
                 type: string
+              photo_url:
+                type: string
               latitude:
                 type: number
                 format: float
@@ -169,6 +170,21 @@ components:
                 type: number
                 format: float
             required: [spot_id,google_map_place_id,name,description,latitude,longitude]
+      example:
+        spots:
+          - spot_id: "spot123"
+            google_map_place_id: "ChIJN1t_tDeuEmsRUsoyG83frY4"
+            name: "Beautiful Park"
+            description: "A quiet park with lovely scenery and walking paths."
+            latitude: 35.6895
+            longitude: 139.6917
+          - spot_id: "spot456"
+            google_map_place_id: "ChIJyWEHuEmuEmsRm9hTkapTCrk"
+            name: "Historic Museum"
+            description: "A museum showcasing local history and artifacts."
+            latitude: 35.6896
+            longitude: 139.6920
+
 
     ErrorRes:
       type: object
