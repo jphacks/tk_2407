@@ -11,15 +11,11 @@ type LocationState =
       error: true
     }
 
-type Options = PositionOptions
-
-export function useCurrentLocation(options: Options = {}): LocationState {
+export function useCurrentLocation(): LocationState {
   const [locationState, setLocation] = useState<LocationState>({
     message: 'something went wrong',
     error: true,
   })
-
-  const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -30,21 +26,15 @@ export function useCurrentLocation(options: Options = {}): LocationState {
       return
     }
 
-    const watcher = navigator.geolocation.watchPosition(
+    const watcherId = navigator.geolocation.watchPosition(
       (position: GeolocationPosition) => {
-        const now = Date.now()
-        // Update only if 0.8 seconds (800 ms) has passed since the last update
-        // fix me
-        if (now - lastUpdate >= 800) {
-          setLocation({
-            value: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-            error: false,
-          })
-          setLastUpdate(now) // Update the last update timestamp
-        }
+        setLocation({
+          value: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          error: false,
+        })
       },
       (error: GeolocationPositionError) => {
         setLocation({
@@ -52,14 +42,17 @@ export function useCurrentLocation(options: Options = {}): LocationState {
           error: true,
         })
       },
-      options
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+      }
     )
 
-    // Cleanup function
+    // クリーンアップ関数
     return () => {
-      navigator.geolocation.clearWatch(watcher)
+      navigator.geolocation.clearWatch(watcherId)
     }
-  }, [options, lastUpdate])
+  }, [])
 
   return locationState
 }
