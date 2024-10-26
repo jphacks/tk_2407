@@ -46,6 +46,7 @@ func main() {
 			log.Fatalf("failed to migrate: %v", err)
 			return
 		}
+		log.Println("Migration done.")
 	}
 
 	// Implement Application API
