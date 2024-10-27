@@ -169,7 +169,7 @@ paths:
               properties:
                 spotId:
                   type: string
-                userid:
+                userId:
                   type: string
                 photoUrl:
                   type: string
@@ -177,7 +177,7 @@ paths:
                   type: string
               required:
                 - spotId
-                - userid
+                - userId
                 - photoUrl
                 - content
       responses:

@@ -141,10 +141,13 @@ func Implement(rg *gin.RouterGroup, q *query.Query) error {
 	userHandler := handler.NewUserHandler(userUsecase)
 	authUsecase := usecase.NewAuthUsecase(q)
 	authHandler := handler.NewAuthHandler(authUsecase)
+	messageUsecase := usecase.NewMessageUsecase(q)
+	messageHandler := handler.NewMessageHandler(messageUsecase)
 
 	rg.GET("/user/:userId", userHandler.GetUser())
 	rg.POST("/signup", authHandler.Signup())
 	rg.POST("/login", authHandler.Login())
+	rg.POST("/message", messageHandler.Create())
 
 	gmClient, err := google_maps.NewGoogleMaps()
 	if err != nil {

@@ -82,7 +82,7 @@ type PostApiV1MessageJSONBody struct {
 	Content  string `json:"content"`
 	PhotoUrl string `json:"photoUrl"`
 	SpotId   string `json:"spotId"`
-	Userid   string `json:"userid"`
+	UserId   string `json:"userId"`
 }
 
 // PostApiV1MessageStampJSONBody defines parameters for PostApiV1MessageStamp.
