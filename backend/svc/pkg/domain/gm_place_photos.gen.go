@@ -9,7 +9,7 @@ const TableNameGmPlacePhoto = "gm_place_photos"
 // GmPlacePhoto mapped from table <gm_place_photos>
 type GmPlacePhoto struct {
 	ID             int32   `gorm:"column:id;type:integer;primaryKey;autoIncrement:true" json:"id"`
-	PlaceID        *string `gorm:"column:place_id;type:character varying(255)" json:"place_id"`
+	GmPlaceID      *string `gorm:"column:gm_place_id;type:character varying(255)" json:"gm_place_id"`
 	PhotoReference string  `gorm:"column:photo_reference;type:character varying(255);not null" json:"photo_reference"`
 	Height         *int32  `gorm:"column:height;type:integer" json:"height"`
 	Width          *int32  `gorm:"column:width;type:integer" json:"width"`
