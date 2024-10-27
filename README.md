@@ -1,6 +1,12 @@
 # つむぎ
 ![tsumugi-white-512](https://github.com/user-attachments/assets/56e1bf11-1857-42c6-83a8-43cb2c0f4e1e)
 
+## アプリQRコード
+![aefafaf0e617629f65d159328582d90b32ec3312](https://github.com/user-attachments/assets/fd42d58c-3bcb-41c2-a56d-6254b77bfade)
+
+## アプリURL
+https://yosegaki.a.shion.pro/login
+
 ## 製品概要
 
 このプロダクトは、「場所に対する誰かの想いを形にし、その想いを共有し合う『エモいコミュニケーションアプリ」です。
