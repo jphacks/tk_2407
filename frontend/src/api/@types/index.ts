@@ -41,6 +41,7 @@ export type ErrorRes = {
 
 export type Spot = {
   spot_id: string;
+  google_map_id: string;
   google_map_place_id: string;
   name: string;
   latitude: number;
