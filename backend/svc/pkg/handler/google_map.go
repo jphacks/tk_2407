@@ -6,6 +6,7 @@ import (
 	"backend/svc/pkg/openapi"
 	"backend/svc/pkg/query"
 	"backend/svc/pkg/util"
+	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"googlemaps.github.io/maps"
@@ -14,6 +15,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type GoogleMapHandler struct {
@@ -138,7 +140,11 @@ func (h *GoogleMapHandler) GetPhotos(c *gin.Context) {
 		return
 	}
 	// return photo
+	expires := time.Now().AddDate(1, 0, 0)
 	c.Header("Content-Type", "image/jpeg")
+	c.Header("Cache-Control", "public, max-age=31536000")
+	c.Header("Expires", expires.Format(time.RFC1123))
+	c.Header("ETag", fmt.Sprintf("%x", md5.Sum([]byte(photoRef))))
 	if err := jpeg.Encode(c.Writer, photo, nil); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode image"})
 		return
