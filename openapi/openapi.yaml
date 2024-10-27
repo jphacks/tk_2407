@@ -315,6 +315,7 @@ components:
         - address
         - types
         - photo_url
+        - google_map_id
       example:
         spot_id: "spot123"
         google_map_place_id: "ChIJN1t_tDeuEmsRUsoyG83frY4"
