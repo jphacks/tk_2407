@@ -156,6 +156,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessSignupRes"
+  /api/v1/message:
+    post:
+      tags:
+        - messages
+      description: Post a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                spotId:
+                  type: string
+                userid:
+                  type: string
+                photoUrl:
+                  type: string
+                content:
+                  type: string
+              required:
+                - spotId
+                - userid
+                - photoUrl
+                - content
+      responses:
+          '201':
+            description: Created
+            content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/SuccessMessageCreateRes"
+  /api/v1/user/me:
+    get:
+      tags:
+        - user
+      description: Get current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessUserRes"
 
 components:
   responses:
@@ -255,14 +299,13 @@ components:
             $ref: "#/components/schemas/Spot"
     SuccessUserRes:
       properties:
+        userId:
+          type: string
         username:
           type: string
         email:
           type: string
-      required: [username,email]
-      example:
-        username: "johndoe"
-        email: "johndoe@example.com"
+      required: [userId, username, email]
     SuccessLoginRes:
       properties:
         userId:
@@ -281,6 +324,20 @@ components:
         message:
           type: string
           example: error message
+    SuccessMessageCreateRes:
+      type: object
+      properties:
+        messageId:
+          type: string
+        spotId:
+          type: string
+        userId:
+          type: string
+        content:
+          type: string
+        photoUrl:
+          type: string
+      required: [messageId, spotId, userId, content, photoUrl]
     Spot:
       type: object
       properties:
