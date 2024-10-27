@@ -23,6 +23,7 @@ export type SuccessLocationRes = {
 }
 
 export type SuccessUserRes = {
+  userId: string;
   username: string;
   email: string;
 }
@@ -37,6 +38,14 @@ export type SuccessSignupRes = {
 
 export type ErrorRes = {
   message: string;
+}
+
+export type SuccessMessageCreateRes = {
+  messageId: string;
+  spotId: string;
+  userId: string;
+  content: string;
+  photoUrl: string;
 }
 
 export type Spot = {

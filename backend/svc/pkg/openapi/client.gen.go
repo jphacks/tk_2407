@@ -97,6 +97,11 @@ type ClientInterface interface {
 
 	PostApiV1Login(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostApiV1MessageWithBody request with any body
+	PostApiV1MessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiV1Message(ctx context.Context, body PostApiV1MessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetApiV1MessagesLocationId request
 	GetApiV1MessagesLocationId(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -110,6 +115,9 @@ type ClientInterface interface {
 
 	// GetApiV1Spots request
 	GetApiV1Spots(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiV1UserMe request
+	GetApiV1UserMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetApiV1UserUserId request
 	GetApiV1UserUserId(ctx context.Context, userId string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -141,6 +149,30 @@ func (c *Client) PostApiV1LoginWithBody(ctx context.Context, contentType string,
 
 func (c *Client) PostApiV1Login(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostApiV1LoginRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiV1MessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiV1MessageRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiV1Message(ctx context.Context, body PostApiV1MessageJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiV1MessageRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -211,6 +243,18 @@ func (c *Client) GetApiV1Spots(ctx context.Context, params *GetApiV1SpotsParams,
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetApiV1UserMe(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiV1UserMeRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetApiV1UserUserId(ctx context.Context, userId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetApiV1UserUserIdRequest(c.Server, userId)
 	if err != nil {
@@ -271,6 +315,46 @@ func NewPostApiV1LoginRequestWithBody(server string, contentType string, body io
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/login")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostApiV1MessageRequest calls the generic PostApiV1Message builder with application/json body
+func NewPostApiV1MessageRequest(server string, body PostApiV1MessageJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiV1MessageRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiV1MessageRequestWithBody generates requests for PostApiV1Message with any type of body
+func NewPostApiV1MessageRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/message")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -455,6 +539,33 @@ func NewGetApiV1SpotsRequest(server string, params *GetApiV1SpotsParams) (*http.
 	return req, nil
 }
 
+// NewGetApiV1UserMeRequest generates requests for GetApiV1UserMe
+func NewGetApiV1UserMeRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/user/me")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetApiV1UserUserIdRequest generates requests for GetApiV1UserUserId
 func NewGetApiV1UserUserIdRequest(server string, userId string) (*http.Request, error) {
 	var err error
@@ -540,6 +651,11 @@ type ClientWithResponsesInterface interface {
 
 	PostApiV1LoginWithResponse(ctx context.Context, body PostApiV1LoginJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1LoginResponse, error)
 
+	// PostApiV1MessageWithBodyWithResponse request with any body
+	PostApiV1MessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiV1MessageResponse, error)
+
+	PostApiV1MessageWithResponse(ctx context.Context, body PostApiV1MessageJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1MessageResponse, error)
+
 	// GetApiV1MessagesLocationIdWithResponse request
 	GetApiV1MessagesLocationIdWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*GetApiV1MessagesLocationIdResponse, error)
 
@@ -553,6 +669,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetApiV1SpotsWithResponse request
 	GetApiV1SpotsWithResponse(ctx context.Context, params *GetApiV1SpotsParams, reqEditors ...RequestEditorFn) (*GetApiV1SpotsResponse, error)
+
+	// GetApiV1UserMeWithResponse request
+	GetApiV1UserMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1UserMeResponse, error)
 
 	// GetApiV1UserUserIdWithResponse request
 	GetApiV1UserUserIdWithResponse(ctx context.Context, userId string, reqEditors ...RequestEditorFn) (*GetApiV1UserUserIdResponse, error)
@@ -596,6 +715,28 @@ func (r PostApiV1LoginResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostApiV1LoginResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiV1MessageResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *SuccessMessageCreateRes
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiV1MessageResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiV1MessageResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -689,6 +830,28 @@ func (r GetApiV1SpotsResponse) StatusCode() int {
 	return 0
 }
 
+type GetApiV1UserMeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SuccessUserRes
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiV1UserMeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiV1UserMeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetApiV1UserUserIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -737,6 +900,23 @@ func (c *ClientWithResponses) PostApiV1LoginWithResponse(ctx context.Context, bo
 	return ParsePostApiV1LoginResponse(rsp)
 }
 
+// PostApiV1MessageWithBodyWithResponse request with arbitrary body returning *PostApiV1MessageResponse
+func (c *ClientWithResponses) PostApiV1MessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiV1MessageResponse, error) {
+	rsp, err := c.PostApiV1MessageWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiV1MessageResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiV1MessageWithResponse(ctx context.Context, body PostApiV1MessageJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiV1MessageResponse, error) {
+	rsp, err := c.PostApiV1Message(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiV1MessageResponse(rsp)
+}
+
 // GetApiV1MessagesLocationIdWithResponse request returning *GetApiV1MessagesLocationIdResponse
 func (c *ClientWithResponses) GetApiV1MessagesLocationIdWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*GetApiV1MessagesLocationIdResponse, error) {
 	rsp, err := c.GetApiV1MessagesLocationId(ctx, locationId, reqEditors...)
@@ -779,6 +959,15 @@ func (c *ClientWithResponses) GetApiV1SpotsWithResponse(ctx context.Context, par
 		return nil, err
 	}
 	return ParseGetApiV1SpotsResponse(rsp)
+}
+
+// GetApiV1UserMeWithResponse request returning *GetApiV1UserMeResponse
+func (c *ClientWithResponses) GetApiV1UserMeWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiV1UserMeResponse, error) {
+	rsp, err := c.GetApiV1UserMe(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiV1UserMeResponse(rsp)
 }
 
 // GetApiV1UserUserIdWithResponse request returning *GetApiV1UserUserIdResponse
@@ -832,6 +1021,32 @@ func ParsePostApiV1LoginResponse(rsp *http.Response) (*PostApiV1LoginResponse, e
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest SuccessLoginRes
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostApiV1MessageResponse parses an HTTP response from a PostApiV1MessageWithResponse call
+func ParsePostApiV1MessageResponse(rsp *http.Response) (*PostApiV1MessageResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiV1MessageResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest SuccessMessageCreateRes
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -926,6 +1141,32 @@ func ParseGetApiV1SpotsResponse(rsp *http.Response) (*GetApiV1SpotsResponse, err
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest SuccessLocationRes
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetApiV1UserMeResponse parses an HTTP response from a GetApiV1UserMeWithResponse call
+func ParseGetApiV1UserMeResponse(rsp *http.Response) (*GetApiV1UserMeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiV1UserMeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SuccessUserRes
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
