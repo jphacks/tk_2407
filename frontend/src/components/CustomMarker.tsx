@@ -44,7 +44,7 @@ export function CustomMarker({
             <h2 className="text-xl font-bold mb-2 text-gray-900">{title}</h2>
           }
         >
-          <SpeechBubble link={`/message/${id}`} description={description} />
+          <SpeechBubble url={`/message/${id}`} description={description} />
         </InfoWindow>
       )}
     </AdvancedMarker>
