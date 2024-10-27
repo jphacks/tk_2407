@@ -84,13 +84,17 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 	go func(results []maps.PlacesSearchResult) {
 		targets := make([]*domain.GmPlace, 0)
 		for _, result := range results {
+			var rating *float32
+			if result.Rating != 0 {
+				rating = &result.Rating
+			}
 			targets = append(targets, &domain.GmPlace{
 				ID:                result.ID,
 				PlaceID:           result.PlaceID,
 				Name:              result.Name,
 				FormattedAddress:  result.FormattedAddress,
 				Icon:              result.Icon,
-				Rating:            &result.Rating,
+				Rating:            rating,
 				UserRatingsTotal:  int32(result.UserRatingsTotal),
 				PriceLevel:        util.GetPtr(int32(result.PriceLevel)),
 				Vicinity:          result.Vicinity,
@@ -101,7 +105,7 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 				Types:             strings.Join(result.Types, ","),
 			})
 		}
-		err := h.q.GmPlace.Create(targets...)
+		err := h.q.GmPlace.Save(targets...)
 		if err != nil {
 			log.Printf("failed to create gm place: %v", err)
 			return
