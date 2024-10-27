@@ -15,8 +15,8 @@ type Reaction struct {
 	ID        string     `gorm:"column:id;type:character(26);primaryKey" json:"id"`
 	UserID    string     `gorm:"column:user_id;type:character(26);not null" json:"user_id"`
 	MessageID string     `gorm:"column:message_id;type:character(26);not null" json:"message_id"`
-	StampID   string     `gorm:"column:stamp_id;type:character(26);not null" json:"stamp_id"`
 	CreatedAt *time.Time `gorm:"column:created_at;type:timestamp with time zone;default:now()" json:"created_at"`
+	StampType string     `gorm:"column:stamp_type;type:character varying(255);not null" json:"stamp_type"`
 }
 
 // TableName Reaction's table name

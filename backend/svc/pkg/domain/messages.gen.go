@@ -14,7 +14,7 @@ const TableNameMessage = "messages"
 type Message struct {
 	ID        string     `gorm:"column:id;type:character(26);primaryKey" json:"id"`
 	UserID    string     `gorm:"column:user_id;type:character(26);not null" json:"user_id"`
-	SpotID    string     `gorm:"column:spot_id;type:character(26);not null" json:"spot_id"`
+	SpotID    string     `gorm:"column:spot_id;type:character varying(255);not null" json:"spot_id"`
 	PhotoURL  string     `gorm:"column:photo_url;type:text;not null" json:"photo_url"`
 	Content   string     `gorm:"column:content;type:text;not null" json:"content"`
 	CreatedAt *time.Time `gorm:"column:created_at;type:timestamp with time zone;default:now()" json:"created_at"`
