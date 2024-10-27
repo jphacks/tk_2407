@@ -29,7 +29,8 @@ func (g *GoogleMaps) GetPlacesFromCoords(ctx context.Context, lat, lng float64) 
 			Lat: lat,
 			Lng: lng,
 		},
-		Radius: 1000,
+		Radius:   1000,
+		Language: "ja-JP",
 	}
 	search, err := g.client.NearbySearch(ctx, req)
 	if err != nil {
