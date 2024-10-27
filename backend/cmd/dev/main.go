@@ -86,24 +86,24 @@ func main() {
 func runMigration(dbUrl string) error {
 	log.Println("Running migration...")
 
-	//read json from /app/migrations/.current.json
-	if _, err := os.Stat("/app/migrations/.config.json"); err == nil {
+	//read json from /app/migrations/config.json
+	if _, err := os.Stat("/app/migrations/config.json"); err == nil {
 		log.Println("No migration run")
 		return nil
 	}
 	// parse json
-	data, err := os.ReadFile("/app/migrations/.config.json")
+	data, err := os.ReadFile("/app/migrations/config.json")
 	if err != nil {
-		return fmt.Errorf("failed to read .config.json: %w", err)
+		return fmt.Errorf("failed to read config.json: %w", err)
 	}
 	var configMigration map[string]interface{}
 	if err := json.Unmarshal(data, &configMigration); err != nil {
-		return fmt.Errorf("failed to unmarshal .config.json: %w", err)
+		return fmt.Errorf("failed to unmarshal config.json: %w", err)
 	}
 
 	ver, ok := configMigration["version"]
 	if !ok {
-		return errors.New("version key not found in .config.json")
+		return errors.New("version key not found in config.json")
 	}
 	verUInt, ok := ver.(uint)
 	if !ok {
