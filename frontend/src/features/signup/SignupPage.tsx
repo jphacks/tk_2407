@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/form'
 import Link from 'next/link'
 import apiClient from '@/apiClient'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   email: z.string().email({ message: 'メールアドレスの形式が不適切です。' }),
@@ -30,6 +31,7 @@ const formSchema = z.object({
 })
 
 function SignupPage() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,6 +52,7 @@ function SignupPage() {
       })
       // fix me
       console.log(res)
+      return router.push('/map')
     } catch (e) {
       console.log(e)
     }

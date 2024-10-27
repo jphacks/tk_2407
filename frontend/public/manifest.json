@@ -2,7 +2,7 @@
   "name": "つむぎ",
   "short_name": "つむぎ",
   "description": "Description of your app, providing context to users.",
-  "start_url": "/",
+  "start_url": "/login",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
