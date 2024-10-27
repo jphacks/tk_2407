@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/oklog/ulid/v2"
-	"google.golang.org/appengine/v2/log"
 	"googlemaps.github.io/maps"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -103,7 +103,7 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 		}
 		err := h.q.GmPlace.Create(targets...)
 		if err != nil {
-			log.Criticalf(c, "failed to create gm place: %v", err)
+			log.Printf("failed to create gm place: %v", err)
 			return
 		}
 	}(results)
