@@ -199,6 +199,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
+  /api/v1/message/stamp:
+    post:
+      tags:
+        - messages
+      description: Post a stamp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageId:
+                  type: string
+                userId:
+                  type: string
+                stampType:
+                  type: string
+              required:
+                  - messageId
+                  - userId
+                  - stampType
+      responses:
+        '201':
+            description: Created
+            content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/SuccessStampRes"
 components:
   responses:
     UnauthorizedError:
@@ -234,6 +263,12 @@ components:
         message:
           type: string
           example: healthy
+    SuccessStampRes:
+      type : object
+      properties:
+        message:
+          type: string
+      required: [message]
     SuccessMessageRes:
       type: object
       properties:
@@ -253,11 +288,13 @@ components:
                 additionalProperties:
                   type: object
                   properties:
+                    type:
+                      type: string # スタンプの種類
                     count:
                       type: integer # スタンプのカウント
                     is_reacted:
                       type: boolean # ユーザーがスタンプを押したかどうか
-                  required: [count, is_reacted]
+                  required: [type, count, is_reacted]
                 nullable: true
             required: [id, author_name, content] # messages 配列内の必須フィールド
       required: [messages] # SuccessMessageRes の必須フィールド

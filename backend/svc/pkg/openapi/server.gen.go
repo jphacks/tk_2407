@@ -23,6 +23,9 @@ type ServerInterface interface {
 	// (POST /api/v1/message)
 	PostApiV1Message(c *gin.Context)
 
+	// (POST /api/v1/message/stamp)
+	PostApiV1MessageStamp(c *gin.Context)
+
 	// (GET /api/v1/messages/{locationId})
 	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
 
@@ -88,6 +91,19 @@ func (siw *ServerInterfaceWrapper) PostApiV1Message(c *gin.Context) {
 	}
 
 	siw.Handler.PostApiV1Message(c)
+}
+
+// PostApiV1MessageStamp operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1MessageStamp(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1MessageStamp(c)
 }
 
 // GetApiV1MessagesLocationId operation middleware
@@ -266,6 +282,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/api/v1/health", wrapper.GetApiV1Health)
 	router.POST(options.BaseURL+"/api/v1/login", wrapper.PostApiV1Login)
 	router.POST(options.BaseURL+"/api/v1/message", wrapper.PostApiV1Message)
+	router.POST(options.BaseURL+"/api/v1/message/stamp", wrapper.PostApiV1MessageStamp)
 	router.GET(options.BaseURL+"/api/v1/messages/:locationId", wrapper.GetApiV1MessagesLocationId)
 	router.POST(options.BaseURL+"/api/v1/signup", wrapper.PostApiV1Signup)
 	router.GET(options.BaseURL+"/api/v1/spot/:spotId/photo", wrapper.GetApiV1SpotSpotIdPhoto)
