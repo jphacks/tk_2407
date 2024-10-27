@@ -91,27 +91,17 @@ func runMigration(dbUrl string) error {
 	if err != nil {
 		return fmt.Errorf("failed to read config.json: %w", err)
 	}
-	var configMigration map[string]interface{}
+	type MigrationConfig struct {
+		Version *uint `json:"version"`
+		Force   *uint `json:"force"`
+	}
+	var configMigration MigrationConfig
 	if err := json.Unmarshal(data, &configMigration); err != nil {
 		return fmt.Errorf("failed to unmarshal config.json: %w", err)
 	}
 
-	ver, ok := configMigration["version"]
-	if !ok {
-		return errors.New("version key not found in config.json")
-	}
-	verUInt, ok := ver.(int)
-	if !ok {
-		return fmt.Errorf("version key is not int: %+v", ver)
-	}
-
-	var forceVer *uint
-	if force, ok := configMigration["force"]; ok {
-		forceV, ok := force.(uint)
-		if !ok {
-			return fmt.Errorf("force key is not uint: %+v", force)
-		}
-		forceVer = &forceV
+	if configMigration.Version == nil {
+		return errors.New("version key is missing")
 	}
 
 	m, err := migrate.New("file:///app/migrations", dbUrl)
@@ -124,16 +114,16 @@ func runMigration(dbUrl string) error {
 	}
 	log.Printf("Current version: %v\n, dirty: %v\n", version, b)
 
-	if forceVer != nil {
-		log.Printf("Forcing version: %v\n", *forceVer)
-		if err := m.Force(int(*forceVer)); err != nil {
+	if configMigration.Force != nil {
+		log.Printf("Forcing version: %v\n", *configMigration.Force)
+		if err := m.Force(int(*configMigration.Force)); err != nil {
 			return fmt.Errorf("failed to force migration: %w", err)
 		}
 		log.Println("Force Migration done.")
 		return nil
 	}
-	log.Printf("Migrating to version: %v\n", verUInt)
-	if err := m.Migrate(uint(verUInt)); err != nil {
+	log.Printf("Migrating to version: %v\n", configMigration.Version)
+	if err := m.Migrate(*configMigration.Version); err != nil {
 		if !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to migrate: %w", err)
 		}
