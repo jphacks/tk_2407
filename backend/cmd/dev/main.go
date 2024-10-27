@@ -92,18 +92,18 @@ func runMigration(dbUrl string) error {
 		return nil
 	}
 	// parse json
-	data, err := os.ReadFile("/app/migrations/.current.json")
+	data, err := os.ReadFile("/app/migrations/.config.json")
 	if err != nil {
-		return fmt.Errorf("failed to read .current.json: %w", err)
+		return fmt.Errorf("failed to read .config.json: %w", err)
 	}
-	var current map[string]interface{}
-	if err := json.Unmarshal(data, &current); err != nil {
-		return fmt.Errorf("failed to unmarshal .current.json: %w", err)
+	var configMigration map[string]interface{}
+	if err := json.Unmarshal(data, &configMigration); err != nil {
+		return fmt.Errorf("failed to unmarshal .config.json: %w", err)
 	}
 
-	ver, ok := current["version"]
+	ver, ok := configMigration["version"]
 	if !ok {
-		return errors.New("version key not found in .current.json")
+		return errors.New("version key not found in .config.json")
 	}
 	verUInt, ok := ver.(uint)
 	if !ok {
@@ -111,7 +111,7 @@ func runMigration(dbUrl string) error {
 	}
 
 	var forceVer *uint
-	if force, ok := current["force"]; ok {
+	if force, ok := configMigration["force"]; ok {
 		forceV, ok := force.(uint)
 		if !ok {
 			return fmt.Errorf("force key is not uint: %+v", force)
