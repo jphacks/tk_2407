@@ -36,7 +36,11 @@ export function CustomMap(props: CustomMapProps) {
         fillColor={'#3b82f6'}
         fillOpacity={0.3}
       />
-      <CustomMarker location={{ latitude: 35.681236, longitude: 139.767125 }} />
+      <CustomMarker
+        location={{ latitude: 35.681236, longitude: 139.767125 }}
+        title="tokyoDOM"
+        description="aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      />
     </Map>
   )
 }

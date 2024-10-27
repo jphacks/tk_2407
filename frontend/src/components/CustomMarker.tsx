@@ -8,7 +8,15 @@ import { CustomPin } from '@/components/CustomPin'
 import { useState } from 'react'
 import { SpeechBubble } from '@/components/SpeechBubble'
 
-export function CustomMarker({ location }: { location: Location }) {
+export function CustomMarker({
+  location,
+  title,
+  description,
+}: {
+  location: Location
+  title: string
+  description: string
+}) {
   const [isOpenInfowindow, setIsOpenInfowindow] = useState<boolean>(false)
   const [markerRef, marker] = useAdvancedMarkerRef()
 
@@ -27,12 +35,12 @@ export function CustomMarker({ location }: { location: Location }) {
           anchor={marker}
           maxWidth={200}
           onCloseClick={() => setIsOpenInfowindow(false)}
+          style={{ width: 'auto', height: 'auto' }}
+          headerContent={
+            <h2 className="text-xl font-bold mb-2 text-gray-900">{title}</h2>
+          }
         >
-          <SpeechBubble
-            title={'東京ドーム'}
-            imageUrl={'/saru.png'}
-            description={'aaaaaaa'}
-          />
+          <SpeechBubble description={description} />
         </InfoWindow>
       )}
     </AdvancedMarker>
