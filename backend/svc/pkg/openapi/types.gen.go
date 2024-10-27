@@ -47,8 +47,9 @@ type SuccessMessageRes struct {
 		Content    string `json:"content"`
 		Id         string `json:"id"`
 		Stamps     *map[string]struct {
-			Count     int  `json:"count"`
-			IsReacted bool `json:"is_reacted"`
+			Count     int    `json:"count"`
+			IsReacted bool   `json:"is_reacted"`
+			Type      string `json:"type"`
 		} `json:"stamps"`
 	} `json:"messages"`
 }
@@ -56,6 +57,11 @@ type SuccessMessageRes struct {
 // SuccessSignupRes defines model for SuccessSignupRes.
 type SuccessSignupRes struct {
 	UserId string `json:"userId"`
+}
+
+// SuccessStampRes defines model for SuccessStampRes.
+type SuccessStampRes struct {
+	Message string `json:"message"`
 }
 
 // SuccessUserRes defines model for SuccessUserRes.
@@ -79,6 +85,13 @@ type PostApiV1MessageJSONBody struct {
 	Userid   string `json:"userid"`
 }
 
+// PostApiV1MessageStampJSONBody defines parameters for PostApiV1MessageStamp.
+type PostApiV1MessageStampJSONBody struct {
+	MessageId string `json:"messageId"`
+	StampType string `json:"stampType"`
+	UserId    string `json:"userId"`
+}
+
 // PostApiV1SignupJSONBody defines parameters for PostApiV1Signup.
 type PostApiV1SignupJSONBody struct {
 	Email    string `json:"email"`
@@ -100,6 +113,9 @@ type PostApiV1LoginJSONRequestBody PostApiV1LoginJSONBody
 
 // PostApiV1MessageJSONRequestBody defines body for PostApiV1Message for application/json ContentType.
 type PostApiV1MessageJSONRequestBody PostApiV1MessageJSONBody
+
+// PostApiV1MessageStampJSONRequestBody defines body for PostApiV1MessageStamp for application/json ContentType.
+type PostApiV1MessageStampJSONRequestBody PostApiV1MessageStampJSONBody
 
 // PostApiV1SignupJSONRequestBody defines body for PostApiV1Signup for application/json ContentType.
 type PostApiV1SignupJSONRequestBody PostApiV1SignupJSONBody

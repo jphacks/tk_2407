@@ -3,6 +3,10 @@ export type HealthRes = {
   message: string;
 }
 
+export type SuccessStampRes = {
+  message: string;
+}
+
 export type SuccessMessageRes = {
   messages: {
     id: string;
@@ -11,6 +15,7 @@ export type SuccessMessageRes = {
 
     stamps?: {
       [key: string]: {
+        type: string;
         count: number;
         is_reacted: boolean;
       };
