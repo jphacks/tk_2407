@@ -82,7 +82,7 @@ export default function MessagePage() {
   return (
     <>
       <div className="bg-yellow-200 h-screen">
-        <MessageCards cardList={cardList} />
+        <MessageCards cardList={cardList} setCardList={setCardList} />
         <button
           className="z-30 fixed bottom-4 right-4 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
           onClick={() => setIsModalOpen(true)}
