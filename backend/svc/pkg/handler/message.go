@@ -38,9 +38,9 @@ func (mh MessageHandler) Create() gin.HandlerFunc {
 		}
 
 		res := openapi.SuccessMessageCreateRes{
-			Content:   *message.Content,
+			Content:   message.Content,
 			MessageId: message.ID,
-			PhotoUrl:  *message.PhotoURL,
+			PhotoUrl:  message.PhotoURL,
 			SpotId:    message.SpotID,
 			UserId:    message.UserID,
 		}
