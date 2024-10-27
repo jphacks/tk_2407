@@ -33,20 +33,10 @@ CREATE TABLE gm_places
 CREATE TABLE gm_place_photos
 (
     id              SERIAL PRIMARY KEY,
-    place_id        VARCHAR(255) REFERENCES gm_places (place_id) ON DELETE CASCADE,
+    gm_place_id     VARCHAR(255) REFERENCES gm_places (id) ON DELETE CASCADE,
     photo_reference VARCHAR(255) NOT NULL,
     height          INT,
     width           INT
-);
-
--- Table: spots
-CREATE TABLE spots
-(
-    id         CHAR(26) PRIMARY KEY,
-    gm_id      VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    FOREIGN KEY (gm_id) REFERENCES gm_places (place_id) ON DELETE CASCADE
 );
 
 -- Table: messages
@@ -60,7 +50,7 @@ CREATE TABLE messages
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (spot_id) REFERENCES spots (id) ON DELETE CASCADE
+    FOREIGN KEY (spot_id) REFERENCES gm_places (id)
 );
 
 -- Table: stamps
