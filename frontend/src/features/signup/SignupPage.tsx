@@ -57,11 +57,11 @@ function SignupPage() {
 
   return (
     <div
-      className="bg-cover bg-center bg-no-repeat min-h-screen flex items-center justify-center"
+      className="bg-cover bg-center bg-no-repeat min-h-screen w-screen flex items-center justify-center"
       style={{ backgroundImage: "url('wallpaper.png')" }}
     >
-      <div className="flex flex-col items-center">
-        <Card className="w-[600px]">
+      <div className="w-full flex flex-col items-center">
+        <Card className="w-[90%] md:w-[40%] sm:w-[90%">
           <div className="my-4 flex flex-col items-center ">
             <img src="tsumugi.png" width={128} height={128} alt="" />
           </div>
