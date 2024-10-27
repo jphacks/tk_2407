@@ -21,12 +21,12 @@ paths:
         - messages
       description: Get message list
       parameters:
-      - name: locationId
-        in: path
-        required: true
-        description: The ID of the location to get messages for
-        schema:
-          type: string
+        - name: locationId
+          in: path
+          required: true
+          description: The ID of the location to get messages for
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -87,12 +87,12 @@ paths:
         - user
       description: Get By ID
       parameters:
-      - name: userId
-        in: path
-        required: true
-        description: The ID of user
-        schema:
-          type: string
+        - name: userId
+          in: path
+          required: true
+          description: The ID of user
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -100,33 +100,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
-
   /api/v1/login:
     post:
       tags:
         - auth
       description: Login
       requestBody:
-              required: true
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      email:
-                        type: string
-                      password:
-                        type: string
-                    required:
-                      - email
-                      - password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
       responses:
         '201':
-            description: Created
-            content:
-                application/json:
-                  schema:
-                      $ref: "#/components/schemas/SuccessLoginRes"
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLoginRes"
   /api/v1/signup:
     post:
       tags:
@@ -182,12 +181,12 @@ paths:
                 - photoUrl
                 - content
       responses:
-          '201':
-            description: Created
-            content:
-                application/json:
-                  schema:
-                      $ref: "#/components/schemas/SuccessMessageCreateRes"
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessageCreateRes"
   /api/v1/user/me:
     get:
       tags:
@@ -200,7 +199,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
-
 components:
   responses:
     UnauthorizedError:
@@ -245,24 +243,24 @@ components:
             type: object
             properties:
               id:
-                type: string  # メッセージ ID
+                type: string # メッセージ ID
               author_name:
-                type: string  # メッセージの著者名
+                type: string # メッセージの著者名
               content:
-                type: string  # メッセージの内容
+                type: string # メッセージの内容
               stamps:
                 type: object
                 additionalProperties:
                   type: object
                   properties:
                     count:
-                      type: integer  # スタンプのカウント
+                      type: integer # スタンプのカウント
                     is_reacted:
-                      type: boolean  # ユーザーがスタンプを押したかどうか
-                  required: [count,is_reacted]
+                      type: boolean # ユーザーがスタンプを押したかどうか
+                  required: [count, is_reacted]
                 nullable: true
-            required: [id, author_name, content]  # messages 配列内の必須フィールド
-      required: [messages]  # SuccessMessageRes の必須フィールド
+            required: [id, author_name, content] # messages 配列内の必須フィールド
+      required: [messages] # SuccessMessageRes の必須フィールド
       example:
         messages:
           - id: 1
