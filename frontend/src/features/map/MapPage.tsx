@@ -5,7 +5,6 @@ import { SpotList } from '@/components/SpotList'
 import { useEffect, useState } from 'react'
 import apiClient from '@/apiClient'
 import { Spot } from '@/api/@types'
-import api from '@/api/$api'
 
 export default function MapPage() {
   const [spots, setSpots] = useState<Spot[]>([])
