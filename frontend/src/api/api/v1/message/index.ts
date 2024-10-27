@@ -11,7 +11,7 @@ export type Methods = DefineMethods<{
 
     reqBody: {
       spotId: string;
-      userid: string;
+      userId: string;
       photoUrl: string;
       content: string;
     };
