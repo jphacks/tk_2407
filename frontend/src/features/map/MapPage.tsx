@@ -1,16 +1,21 @@
-import { APIProvider } from '@vis.gl/react-google-maps'
+import { APIProvider, useApiIsLoaded } from '@vis.gl/react-google-maps'
 import { CustomMap } from '@/components/CustomMap'
 import { useCurrentLocation } from '@/hooks/useCurrentLocation'
 import { SpotList } from '@/components/SpotList'
 import { useEffect, useState } from 'react'
 import apiClient from '@/apiClient'
 import { Spot } from '@/api/@types'
+import api from '@/api/$api'
 
 export default function MapPage() {
   const [spots, setSpots] = useState<Spot[]>([])
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const currentLocation = useCurrentLocation()
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+  const apiIsLoaded = useApiIsLoaded()
+  useEffect(() => {
+    if (!apiIsLoaded) return
+  }, [apiIsLoaded])
   useEffect(() => {
     const fetchSpots = async () => {
       if (currentLocation.error) return
@@ -39,6 +44,7 @@ export default function MapPage() {
   return (
     <div>
       <h1>Map</h1>
+      {!apiIsLoaded && <p>ロード中</p>}
       <div>
         <SpotList spots={spots} isOpen={true} onToggle={toggleIsOpen} />
         <APIProvider apiKey={API_KEY}>
