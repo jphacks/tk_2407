@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"googlemaps.github.io/maps"
+	"image/jpeg"
 	"log"
 	"net/http"
 	"strconv"
@@ -63,6 +64,10 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 
 	resps := make([]openapi.Spot, 0)
 	for _, result := range results {
+		var photoUrl string
+		if len(result.Photos) != 0 {
+			photoUrl = fmt.Sprintf("https://api.yoseaki.a.shion.pro/api/v1/photo/%s", result.Photos[0].PhotoReference)
+		}
 		resps = append(resps, openapi.Spot{
 			Address:          result.FormattedAddress,
 			GoogleMapId:      result.ID,
@@ -70,7 +75,7 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 			Latitude:         result.Geometry.Location.Lat,
 			Longitude:        result.Geometry.Location.Lng,
 			Name:             result.Name,
-			PhotoUrl:         "",
+			PhotoUrl:         photoUrl,
 			Types:            result.Types,
 		})
 	}
@@ -117,4 +122,25 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 		}
 		err = h.q.GmPlacePhoto.Save(targetPhotos...)
 	}(results)
+}
+
+func (h *GoogleMapHandler) GetPhotos(c *gin.Context) {
+	photoRef := c.Param("photoRef")
+	if photoRef == "" {
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("place_id is required"))
+		return
+	}
+	log.Printf("photoRef: %s", photoRef)
+	photo, err := h.client.GetPlacePhoto(c, photoRef, 500, 500)
+	if err != nil {
+		log.Printf("failed to get photo: %v", err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to get photo"})
+		return
+	}
+	// return photo
+	c.Header("Content-Type", "image/jpeg")
+	if err := jpeg.Encode(c.Writer, photo, nil); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode image"})
+		return
+	}
 }
