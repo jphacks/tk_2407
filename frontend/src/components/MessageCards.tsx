@@ -6,6 +6,7 @@ import { useRef } from 'react'
 
 type MessageCardsProps = {
   cardList: Card[]
+  setCardList: (cardList: Card[]) => void
 }
 
 export type Card = {
@@ -35,8 +36,30 @@ export const colors = [
   'bg-yellow-300',
 ]
 
-export const MessageCards: React.FC<MessageCardsProps> = ({ cardList }) => {
+export const MessageCards: React.FC<MessageCardsProps> = ({
+  cardList,
+  setCardList,
+}) => {
   const reactionButtonRef = useRef<HTMLButtonElement>(null)
+
+  const handleStampClick = (cardId: string, stampType: string) => {
+    setCardList(
+      cardList.map((card) =>
+        card.id === cardId
+          ? {
+              ...card,
+              stamps: card.stamps.map((stamp) =>
+                stamp.type === stampType
+                  ? stamp.is_reacted
+                    ? { ...stamp, count: stamp.count - 1, is_reacted: false }
+                    : { ...stamp, count: stamp.count + 1, is_reacted: true }
+                  : stamp
+              ),
+            }
+          : card
+      )
+    )
+  }
 
   return (
     <>
@@ -72,13 +95,14 @@ export const MessageCards: React.FC<MessageCardsProps> = ({ cardList }) => {
                 <MdOutlineAddReaction />
               </button>
               {card.stamps?.map((stamp) => (
-                <div
+                <button
                   className={`rounded-full flex gap-1 px-1.5 py-0.5 text-xs ${stamp.is_reacted ? 'bg-blue-400 text-white' : 'bg-gray-100 text-gray-600'}`}
                   key={stamp.type}
+                  onClick={() => handleStampClick(card.id, stamp.type)}
                 >
                   <div>{stampMap[stamp.type as keyof typeof stampMap]}</div>
                   <div>{stamp.count}</div>
-                </div>
+                </button>
               ))}
             </div>
           </motion.div>
