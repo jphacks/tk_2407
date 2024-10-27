@@ -1,6 +1,9 @@
 import { Map, Marker } from '@vis.gl/react-google-maps'
-import { Circle } from '@/components/Circle'
+import { type Location } from '@/types/Location'
+import apiClient from '@/apiClient'
+import React, { useEffect, useState } from 'react'
 import { CustomMarker } from '@/components/CustomMarker'
+import { Spot } from '@/api/@types'
 
 type CustomMapProps = {
   centerLocation: Location
@@ -8,31 +11,27 @@ type CustomMapProps = {
 
 export function CustomMap(props: CustomMapProps) {
   const { centerLocation } = props
-
-  const spotsList = [
-    {
-      id: 1,
-      name: 'Spot 1',
-      description: 'This is spot 1',
-      latitude: 35.681236,
-      longitude: 139.767125,
-    },
-    {
-      id: 2,
-      name: 'Spot 2',
-      description: 'This is spot 2',
-      latitude: 35.681236,
-      longitude: 139.767125,
-    },
-    {
-      id: 3,
-      name: 'Spot 3',
-      description: 'This is spot 3',
-      latitude: 35.681236,
-      longitude: 139.767125,
-    },
-  ]
-
+  console.log('centerLocation', centerLocation)
+  const [spots, setSpots] = useState<Spot[]>([])
+  useEffect(() => {
+    const fetchSpots = async () => {
+      const spotsResp = await apiClient.api.v1.spots
+        .$get({
+          query: {
+            latitude: centerLocation.latitude,
+            longitude: centerLocation.longitude,
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          return res
+        })
+      if (spotsResp.spots) {
+        setSpots(spotsResp.spots)
+      } else console.error('No spots found')
+    }
+    fetchSpots()
+  }, [centerLocation])
   return (
     <Map
       style={{ width: '100vw', height: '100vh' }}
@@ -50,28 +49,17 @@ export function CustomMap(props: CustomMapProps) {
           lat: centerLocation.latitude,
           lng: centerLocation.longitude,
         }}
-      />
-      <Circle
-        radius={1000}
-        center={{ lat: centerLocation.latitude, lng: centerLocation.longitude }}
-        strokeColor={'#0c4cb3'}
-        strokeOpacity={1}
-        strokeWeight={3}
-        fillColor={'#3b82f6'}
-        fillOpacity={0.3}
-      />
-      {spotsList.map((spot) => (
-        return (
-          <CustomMarker
-            location={{ latitude: spot.latitude, longitude: spot.longitude }}
-            id={spot.id}
-            title={spot.name}
-            description={spot.description}
-          />
-        )
-      ))
-      }
-      
+      ></Marker>
+      {spots.map((spot) => (
+        <CustomMarker
+          key={spot.google_map_place_id}
+          imageUrl={spot.photo_url}
+          id={spot.google_map_place_id}
+          title={spot.name}
+          location={spot}
+          description=""
+        ></CustomMarker>
+      ))}
     </Map>
   )
 }

@@ -9,12 +9,16 @@ import { useState } from 'react'
 import { SpeechBubble } from '@/components/SpeechBubble'
 
 export function CustomMarker({
+  id,
   location,
   title,
+  imageUrl,
   description,
 }: {
+  id: string
   location: Location
   title: string
+  imageUrl: string
   description: string
 }) {
   const [isOpenInfowindow, setIsOpenInfowindow] = useState<boolean>(false)
@@ -29,7 +33,7 @@ export function CustomMarker({
       position={{ lat: location.latitude, lng: location.longitude }}
       title={'AdvancedMarker that opens an Infowindow when clicked.'}
     >
-      <CustomPin imageUrl="/saru.png" />
+      <CustomPin imageUrl={imageUrl} />
       {isOpenInfowindow && (
         <InfoWindow
           anchor={marker}
@@ -40,7 +44,7 @@ export function CustomMarker({
             <h2 className="text-xl font-bold mb-2 text-gray-900">{title}</h2>
           }
         >
-          <SpeechBubble description={description} />
+          <SpeechBubble link={`/message/${id}`} description={description} />
         </InfoWindow>
       )}
     </AdvancedMarker>
