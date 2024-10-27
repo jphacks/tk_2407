@@ -8,7 +8,6 @@ import (
 	"backend/svc/pkg/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/oklog/ulid/v2"
 	"googlemaps.github.io/maps"
 	"log"
 	"net/http"
@@ -62,8 +61,6 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 		fmt.Println(result.Name)
 	}
 
-	spotID := ulid.Make().String()
-
 	resps := make([]openapi.Spot, 0)
 	for _, result := range results {
 		resps = append(resps, openapi.Spot{
@@ -74,7 +71,6 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 			Longitude:        result.Geometry.Location.Lng,
 			Name:             result.Name,
 			PhotoUrl:         "",
-			SpotId:           spotID,
 			Types:            result.Types,
 		})
 	}
@@ -110,5 +106,17 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 			log.Printf("failed to create gm place: %v", err)
 			return
 		}
+		targetPhotos := make([]*domain.GmPlacePhoto, 0)
+		for _, result := range results {
+			for _, photo := range result.Photos {
+				targetPhotos = append(targetPhotos, &domain.GmPlacePhoto{
+					GmPlaceID:      &result.ID,
+					PhotoReference: photo.PhotoReference,
+					Width:          util.GetPtr(int32(photo.Width)),
+					Height:         util.GetPtr(int32(photo.Height)),
+				})
+			}
+		}
+		err = h.q.GmPlacePhoto.Save(targetPhotos...)
 	}(results)
 }
