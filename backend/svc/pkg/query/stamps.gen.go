@@ -27,7 +27,6 @@ func newStamp(db *gorm.DB, opts ...gen.DOOption) stamp {
 
 	tableName := _stamp.stampDo.TableName()
 	_stamp.ALL = field.NewAsterisk(tableName)
-	_stamp.ID = field.NewString(tableName, "id")
 	_stamp.Type = field.NewString(tableName, "type")
 	_stamp.CreatedAt = field.NewTime(tableName, "created_at")
 	_stamp.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -41,7 +40,6 @@ type stamp struct {
 	stampDo
 
 	ALL       field.Asterisk
-	ID        field.String
 	Type      field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
@@ -61,7 +59,6 @@ func (s stamp) As(alias string) *stamp {
 
 func (s *stamp) updateTableName(table string) *stamp {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewString(table, "id")
 	s.Type = field.NewString(table, "type")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
@@ -81,8 +78,7 @@ func (s *stamp) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *stamp) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 4)
-	s.fieldMap["id"] = s.ID
+	s.fieldMap = make(map[string]field.Expr, 3)
 	s.fieldMap["type"] = s.Type
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt

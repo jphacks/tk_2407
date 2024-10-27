@@ -30,8 +30,8 @@ func newReaction(db *gorm.DB, opts ...gen.DOOption) reaction {
 	_reaction.ID = field.NewString(tableName, "id")
 	_reaction.UserID = field.NewString(tableName, "user_id")
 	_reaction.MessageID = field.NewString(tableName, "message_id")
-	_reaction.StampID = field.NewString(tableName, "stamp_id")
 	_reaction.CreatedAt = field.NewTime(tableName, "created_at")
+	_reaction.StampType = field.NewString(tableName, "stamp_type")
 
 	_reaction.fillFieldMap()
 
@@ -45,8 +45,8 @@ type reaction struct {
 	ID        field.String
 	UserID    field.String
 	MessageID field.String
-	StampID   field.String
 	CreatedAt field.Time
+	StampType field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -66,8 +66,8 @@ func (r *reaction) updateTableName(table string) *reaction {
 	r.ID = field.NewString(table, "id")
 	r.UserID = field.NewString(table, "user_id")
 	r.MessageID = field.NewString(table, "message_id")
-	r.StampID = field.NewString(table, "stamp_id")
 	r.CreatedAt = field.NewTime(table, "created_at")
+	r.StampType = field.NewString(table, "stamp_type")
 
 	r.fillFieldMap()
 
@@ -88,8 +88,8 @@ func (r *reaction) fillFieldMap() {
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["user_id"] = r.UserID
 	r.fieldMap["message_id"] = r.MessageID
-	r.fieldMap["stamp_id"] = r.StampID
 	r.fieldMap["created_at"] = r.CreatedAt
+	r.fieldMap["stamp_type"] = r.StampType
 }
 
 func (r reaction) clone(db *gorm.DB) reaction {

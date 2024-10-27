@@ -1,0 +1,2 @@
+ALTER TABLE messages
+    ALTER COLUMN spot_id TYPE VARCHAR(255);

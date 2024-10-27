@@ -12,8 +12,7 @@ const TableNameStamp = "stamps"
 
 // Stamp mapped from table <stamps>
 type Stamp struct {
-	ID        string     `gorm:"column:id;type:character(26);primaryKey" json:"id"`
-	Type      string     `gorm:"column:type;type:character varying(255);not null" json:"type"`
+	Type      string     `gorm:"column:type;type:character varying(255);primaryKey" json:"type"`
 	CreatedAt *time.Time `gorm:"column:created_at;type:timestamp with time zone;default:now()" json:"created_at"`
 	UpdatedAt *time.Time `gorm:"column:updated_at;type:timestamp with time zone;default:now()" json:"updated_at"`
 }
