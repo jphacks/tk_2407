@@ -28,12 +28,7 @@ func newSpot(db *gorm.DB, opts ...gen.DOOption) spot {
 	tableName := _spot.spotDo.TableName()
 	_spot.ALL = field.NewAsterisk(tableName)
 	_spot.ID = field.NewString(tableName, "id")
-	_spot.Name = field.NewString(tableName, "name")
-	_spot.Description = field.NewString(tableName, "description")
-	_spot.PhotoURL = field.NewString(tableName, "photo_url")
-	_spot.GoogleMapPlaceID = field.NewString(tableName, "google_map_place_id")
-	_spot.Latitude = field.NewFloat64(tableName, "latitude")
-	_spot.Longitude = field.NewFloat64(tableName, "longitude")
+	_spot.GmID = field.NewString(tableName, "gm_id")
 	_spot.CreatedAt = field.NewTime(tableName, "created_at")
 	_spot.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -45,16 +40,11 @@ func newSpot(db *gorm.DB, opts ...gen.DOOption) spot {
 type spot struct {
 	spotDo
 
-	ALL              field.Asterisk
-	ID               field.String
-	Name             field.String
-	Description      field.String
-	PhotoURL         field.String
-	GoogleMapPlaceID field.String
-	Latitude         field.Float64
-	Longitude        field.Float64
-	CreatedAt        field.Time
-	UpdatedAt        field.Time
+	ALL       field.Asterisk
+	ID        field.String
+	GmID      field.String
+	CreatedAt field.Time
+	UpdatedAt field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -72,12 +62,7 @@ func (s spot) As(alias string) *spot {
 func (s *spot) updateTableName(table string) *spot {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewString(table, "id")
-	s.Name = field.NewString(table, "name")
-	s.Description = field.NewString(table, "description")
-	s.PhotoURL = field.NewString(table, "photo_url")
-	s.GoogleMapPlaceID = field.NewString(table, "google_map_place_id")
-	s.Latitude = field.NewFloat64(table, "latitude")
-	s.Longitude = field.NewFloat64(table, "longitude")
+	s.GmID = field.NewString(table, "gm_id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -96,14 +81,9 @@ func (s *spot) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *spot) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 9)
+	s.fieldMap = make(map[string]field.Expr, 4)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["name"] = s.Name
-	s.fieldMap["description"] = s.Description
-	s.fieldMap["photo_url"] = s.PhotoURL
-	s.fieldMap["google_map_place_id"] = s.GoogleMapPlaceID
-	s.fieldMap["latitude"] = s.Latitude
-	s.fieldMap["longitude"] = s.Longitude
+	s.fieldMap["gm_id"] = s.GmID
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
 }

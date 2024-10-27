@@ -27,7 +27,7 @@ func newGmPlace(db *gorm.DB, opts ...gen.DOOption) gmPlace {
 
 	tableName := _gmPlace.gmPlaceDo.TableName()
 	_gmPlace.ALL = field.NewAsterisk(tableName)
-	_gmPlace.ID = field.NewInt32(tableName, "id")
+	_gmPlace.ID = field.NewString(tableName, "id")
 	_gmPlace.PlaceID = field.NewString(tableName, "place_id")
 	_gmPlace.Name = field.NewString(tableName, "name")
 	_gmPlace.FormattedAddress = field.NewString(tableName, "formatted_address")
@@ -52,7 +52,7 @@ type gmPlace struct {
 	gmPlaceDo
 
 	ALL               field.Asterisk
-	ID                field.Int32
+	ID                field.String
 	PlaceID           field.String
 	Name              field.String
 	FormattedAddress  field.String
@@ -83,7 +83,7 @@ func (g gmPlace) As(alias string) *gmPlace {
 
 func (g *gmPlace) updateTableName(table string) *gmPlace {
 	g.ALL = field.NewAsterisk(table)
-	g.ID = field.NewInt32(table, "id")
+	g.ID = field.NewString(table, "id")
 	g.PlaceID = field.NewString(table, "place_id")
 	g.Name = field.NewString(table, "name")
 	g.FormattedAddress = field.NewString(table, "formatted_address")

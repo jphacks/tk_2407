@@ -12,20 +12,20 @@ const TableNameGmPlace = "gm_places"
 
 // GmPlace mapped from table <gm_places>
 type GmPlace struct {
-	ID                int32      `gorm:"column:id;type:integer;primaryKey;autoIncrement:true" json:"id"`
+	ID                string     `gorm:"column:id;type:character varying(255);primaryKey" json:"id"`
 	PlaceID           string     `gorm:"column:place_id;type:character varying(255);not null" json:"place_id"`
-	Name              *string    `gorm:"column:name;type:character varying(255)" json:"name"`
-	FormattedAddress  *string    `gorm:"column:formatted_address;type:text" json:"formatted_address"`
-	Icon              *string    `gorm:"column:icon;type:character varying(255)" json:"icon"`
+	Name              string     `gorm:"column:name;type:character varying(255);not null" json:"name"`
+	FormattedAddress  string     `gorm:"column:formatted_address;type:text;not null" json:"formatted_address"`
+	Icon              string     `gorm:"column:icon;type:character varying(255);not null" json:"icon"`
 	Rating            *float32   `gorm:"column:rating;type:real" json:"rating"`
-	UserRatingsTotal  *int32     `gorm:"column:user_ratings_total;type:integer" json:"user_ratings_total"`
+	UserRatingsTotal  int32      `gorm:"column:user_ratings_total;type:integer;not null" json:"user_ratings_total"`
 	PriceLevel        *int32     `gorm:"column:price_level;type:integer" json:"price_level"`
-	Vicinity          *string    `gorm:"column:vicinity;type:text" json:"vicinity"`
-	PermanentlyClosed *bool      `gorm:"column:permanently_closed;type:boolean" json:"permanently_closed"`
-	BusinessStatus    *string    `gorm:"column:business_status;type:character varying(255)" json:"business_status"`
-	LocationLatitude  *float64   `gorm:"column:location_latitude;type:double precision" json:"location_latitude"`
-	LocationLongitude *float64   `gorm:"column:location_longitude;type:double precision" json:"location_longitude"`
-	Types             *string    `gorm:"column:types;type:text" json:"types"`
+	Vicinity          string     `gorm:"column:vicinity;type:text;not null" json:"vicinity"`
+	PermanentlyClosed bool       `gorm:"column:permanently_closed;type:boolean;not null" json:"permanently_closed"`
+	BusinessStatus    string     `gorm:"column:business_status;type:character varying(255);not null" json:"business_status"`
+	LocationLatitude  float64    `gorm:"column:location_latitude;type:double precision;not null" json:"location_latitude"`
+	LocationLongitude float64    `gorm:"column:location_longitude;type:double precision;not null" json:"location_longitude"`
+	Types             string     `gorm:"column:types;type:text;not null" json:"types"`
 	CreatedAt         *time.Time `gorm:"column:created_at;type:timestamp without time zone;default:CURRENT_TIMESTAMP" json:"created_at"`
 }
 
