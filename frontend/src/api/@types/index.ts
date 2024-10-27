@@ -19,16 +19,7 @@ export type SuccessMessageRes = {
 }
 
 export type SuccessLocationRes = {
-  spots?: {
-    spot_id: string;
-    google_map_place_id: string;
-    name: string;
-    latitude: number;
-    longitude: number;
-    address: string;
-    types: string[];
-    photo_url: string;
-  }[] | null | undefined;
+  spots?: Spot[] | null | undefined;
 }
 
 export type SuccessUserRes = {
@@ -46,6 +37,17 @@ export type SuccessSignupRes = {
 
 export type ErrorRes = {
   message: string;
+}
+
+export type Spot = {
+  spot_id: string;
+  google_map_place_id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  types: string[];
+  photo_url: string;
 }
 
 export type UnauthorizedError = ErrorRes
