@@ -28,7 +28,7 @@ func newGmPlacePhoto(db *gorm.DB, opts ...gen.DOOption) gmPlacePhoto {
 	tableName := _gmPlacePhoto.gmPlacePhotoDo.TableName()
 	_gmPlacePhoto.ALL = field.NewAsterisk(tableName)
 	_gmPlacePhoto.ID = field.NewInt32(tableName, "id")
-	_gmPlacePhoto.PlaceID = field.NewString(tableName, "place_id")
+	_gmPlacePhoto.GmPlaceID = field.NewString(tableName, "gm_place_id")
 	_gmPlacePhoto.PhotoReference = field.NewString(tableName, "photo_reference")
 	_gmPlacePhoto.Height = field.NewInt32(tableName, "height")
 	_gmPlacePhoto.Width = field.NewInt32(tableName, "width")
@@ -43,7 +43,7 @@ type gmPlacePhoto struct {
 
 	ALL            field.Asterisk
 	ID             field.Int32
-	PlaceID        field.String
+	GmPlaceID      field.String
 	PhotoReference field.String
 	Height         field.Int32
 	Width          field.Int32
@@ -64,7 +64,7 @@ func (g gmPlacePhoto) As(alias string) *gmPlacePhoto {
 func (g *gmPlacePhoto) updateTableName(table string) *gmPlacePhoto {
 	g.ALL = field.NewAsterisk(table)
 	g.ID = field.NewInt32(table, "id")
-	g.PlaceID = field.NewString(table, "place_id")
+	g.GmPlaceID = field.NewString(table, "gm_place_id")
 	g.PhotoReference = field.NewString(table, "photo_reference")
 	g.Height = field.NewInt32(table, "height")
 	g.Width = field.NewInt32(table, "width")
@@ -86,7 +86,7 @@ func (g *gmPlacePhoto) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 func (g *gmPlacePhoto) fillFieldMap() {
 	g.fieldMap = make(map[string]field.Expr, 5)
 	g.fieldMap["id"] = g.ID
-	g.fieldMap["place_id"] = g.PlaceID
+	g.fieldMap["gm_place_id"] = g.GmPlaceID
 	g.fieldMap["photo_reference"] = g.PhotoReference
 	g.fieldMap["height"] = g.Height
 	g.fieldMap["width"] = g.Width
