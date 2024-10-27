@@ -49,7 +49,7 @@ jobs:
           file: ./frontend/Dockerfile
           build-args: |
             NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.FRONTEND_GOOGLE_MAPS_API_KEY }}
-
+            NEXT_PUBLIC_BASE_URL=${{ variables.NEXT_PUBLIC_BASE_URL }}
       - name: Download Cloud Run Service YAML
         run: |
           gcloud run services describe frontend-main --format yaml --region asia-northeast1 > ./service-frontend.yaml
