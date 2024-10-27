@@ -66,7 +66,7 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 	for _, result := range results {
 		var photoUrl string
 		if len(result.Photos) != 0 {
-			photoUrl = fmt.Sprintf("https://api.yoseaki.a.shion.pro/api/v1/photo/%s", result.Photos[0].PhotoReference)
+			photoUrl = fmt.Sprintf("https://api.yosegaki.a.shion.pro/api/v1/photo/%s", result.Photos[0].PhotoReference)
 		}
 		resps = append(resps, openapi.Spot{
 			Address:          result.FormattedAddress,
