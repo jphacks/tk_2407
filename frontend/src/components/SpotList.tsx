@@ -31,8 +31,8 @@ const MessageSpot = ({ name }: { name: string }) => {
 export function SpotList({ spots, isOpen, onToggle }: SpotListProps) {
   return (
     <Card
-      className={`absolute left-0 right-0 bottom-0 bg-gradient-to-tl from-blue-400/40 via-blue-400 to-blue-500 backdrop-blur-lg rounded-t-xl shadow-lg transition-all duration-300 ease-in-out ${
-        isOpen ? 'max-h-[70%]' : 'max-h-[80px]'
+      className={`fixed left-0 right-0 bottom-0 bg-gradient-to-tl from-blue-400/40 via-blue-400 to-blue-500 backdrop-blur-lg rounded-t-xl shadow-lg transition-all duration-300 ease-in-out ${
+        isOpen ? 'h-[50vh]' : 'max-h-[80px]'
       }`}
     >
       <div
@@ -52,7 +52,7 @@ export function SpotList({ spots, isOpen, onToggle }: SpotListProps) {
         </Button>
       </div>
       {isOpen && (
-        <ScrollArea className="h-[calc(100%-56px)]">
+        <ScrollArea className="h-[calc(100%-56px)] pb-10">
           {spots.map((spot) => (
             <MessageSpot key={spot.id} {...spot} />
           ))}
