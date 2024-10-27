@@ -44,7 +44,7 @@ func (g *GoogleMaps) GetPlacesFromCoords(ctx context.Context, lat, lng float64) 
 func (g *GoogleMaps) GetPlacePhoto(ctx context.Context, photoRef string, maxWidth, maxHeight uint) (image.Image, error) {
 	// This function should return a list of photo URLs for the given place ID
 	req := &maps.PlacePhotoRequest{
-		PhotoReference: "",
+		PhotoReference: photoRef,
 		MaxWidth:       maxWidth,
 		MaxHeight:      maxHeight,
 	}

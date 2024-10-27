@@ -152,5 +152,6 @@ func Implement(rg *gin.RouterGroup, q *query.Query) error {
 	}
 	googleMap := handler.NewGoogleMapHandler(q, *gmClient)
 	rg.GET("/spots", googleMap.GetApiV1Spots)
+	rg.GET("/photo/:photoRef", googleMap.GetPhotos)
 	return nil
 }
