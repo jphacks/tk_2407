@@ -122,7 +122,7 @@ func runMigration(dbUrl string) error {
 		log.Println("Force Migration done.")
 		return nil
 	}
-	log.Printf("Migrating to version: %v\n", configMigration.Version)
+	log.Printf("Migrating to version: %v\n", *configMigration.Version)
 	if err := m.Migrate(*configMigration.Version); err != nil {
 		if !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to migrate: %w", err)
