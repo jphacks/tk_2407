@@ -9,3 +9,9 @@ Frontend:
 CI/CD:
   - changed-files:
     - any-glob-to-any-file: '.github/**'
+
+OpenAPI:
+  - changed-files:
+    - any-glob-to-any-file: 'openapi/**'
+    - any-glob-to-any-file: 'backend/svc/pkg/openapi/**'
+    - any-glob-to-any-file: 'frontend/src/api/**'

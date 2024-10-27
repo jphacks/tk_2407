@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/pkg/google_maps"
 	"backend/pkg/settings"
 	"backend/svc/pkg/handler"
 	"backend/svc/pkg/middleware"
@@ -122,7 +123,7 @@ func runMigration(dbUrl string) error {
 		log.Println("Force Migration done.")
 		return nil
 	}
-	log.Printf("Migrating to version: %v\n", configMigration.Version)
+	log.Printf("Migrating to version: %v\n", *configMigration.Version)
 	if err := m.Migrate(*configMigration.Version); err != nil {
 		if !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to migrate: %w", err)
@@ -145,5 +146,11 @@ func Implement(rg *gin.RouterGroup, q *query.Query) error {
 	rg.POST("/signup", authHandler.Signup())
 	rg.POST("/login", authHandler.Login())
 
+	gmClient, err := google_maps.NewGoogleMaps()
+	if err != nil {
+		log.Fatalf("failed to create google maps client: %v", err)
+	}
+	googleMap := handler.NewGoogleMapHandler(q, *gmClient)
+	rg.GET("/spots", googleMap.GetApiV1Spots)
 	return nil
 }

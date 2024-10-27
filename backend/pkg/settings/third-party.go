@@ -7,6 +7,6 @@ type (
 		GoogleMaps GoogleMaps `yaml:"google_maps"`
 	}
 	GoogleMaps struct {
-		APIKey string
+		APIKey string `yaml:"api_key"`
 	}
 )
