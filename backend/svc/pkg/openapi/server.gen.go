@@ -17,11 +17,29 @@ type ServerInterface interface {
 	// (GET /api/v1/health)
 	GetApiV1Health(c *gin.Context)
 
+	// (POST /api/v1/login)
+	PostApiV1Login(c *gin.Context)
+
+	// (POST /api/v1/message)
+	PostApiV1Message(c *gin.Context)
+
+	// (POST /api/v1/message/stamp)
+	PostApiV1MessageStamp(c *gin.Context)
+
 	// (GET /api/v1/messages/{locationId})
 	GetApiV1MessagesLocationId(c *gin.Context, locationId string)
 
+	// (POST /api/v1/signup)
+	PostApiV1Signup(c *gin.Context)
+	// Retrieve a list of locations
+	// (GET /api/v1/spot/{spotId}/photo)
+	GetApiV1SpotSpotIdPhoto(c *gin.Context, spotId string)
+	// Retrieve a list of locations
 	// (GET /api/v1/spots)
 	GetApiV1Spots(c *gin.Context, params GetApiV1SpotsParams)
+
+	// (GET /api/v1/user/me)
+	GetApiV1UserMe(c *gin.Context)
 
 	// (GET /api/v1/user/{userId})
 	GetApiV1UserUserId(c *gin.Context, userId string)
@@ -49,6 +67,45 @@ func (siw *ServerInterfaceWrapper) GetApiV1Health(c *gin.Context) {
 	siw.Handler.GetApiV1Health(c)
 }
 
+// PostApiV1Login operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1Login(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1Login(c)
+}
+
+// PostApiV1Message operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1Message(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1Message(c)
+}
+
+// PostApiV1MessageStamp operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1MessageStamp(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1MessageStamp(c)
+}
+
 // GetApiV1MessagesLocationId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 
@@ -71,6 +128,43 @@ func (siw *ServerInterfaceWrapper) GetApiV1MessagesLocationId(c *gin.Context) {
 	}
 
 	siw.Handler.GetApiV1MessagesLocationId(c, locationId)
+}
+
+// PostApiV1Signup operation middleware
+func (siw *ServerInterfaceWrapper) PostApiV1Signup(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostApiV1Signup(c)
+}
+
+// GetApiV1SpotSpotIdPhoto operation middleware
+func (siw *ServerInterfaceWrapper) GetApiV1SpotSpotIdPhoto(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "spotId" -------------
+	var spotId string
+
+	err = runtime.BindStyledParameter("simple", false, "spotId", c.Param("spotId"), &spotId)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter spotId: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetApiV1SpotSpotIdPhoto(c, spotId)
 }
 
 // GetApiV1Spots operation middleware
@@ -119,6 +213,19 @@ func (siw *ServerInterfaceWrapper) GetApiV1Spots(c *gin.Context) {
 	}
 
 	siw.Handler.GetApiV1Spots(c, params)
+}
+
+// GetApiV1UserMe operation middleware
+func (siw *ServerInterfaceWrapper) GetApiV1UserMe(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetApiV1UserMe(c)
 }
 
 // GetApiV1UserUserId operation middleware
@@ -173,7 +280,13 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/api/v1/health", wrapper.GetApiV1Health)
+	router.POST(options.BaseURL+"/api/v1/login", wrapper.PostApiV1Login)
+	router.POST(options.BaseURL+"/api/v1/message", wrapper.PostApiV1Message)
+	router.POST(options.BaseURL+"/api/v1/message/stamp", wrapper.PostApiV1MessageStamp)
 	router.GET(options.BaseURL+"/api/v1/messages/:locationId", wrapper.GetApiV1MessagesLocationId)
+	router.POST(options.BaseURL+"/api/v1/signup", wrapper.PostApiV1Signup)
+	router.GET(options.BaseURL+"/api/v1/spot/:spotId/photo", wrapper.GetApiV1SpotSpotIdPhoto)
 	router.GET(options.BaseURL+"/api/v1/spots", wrapper.GetApiV1Spots)
+	router.GET(options.BaseURL+"/api/v1/user/me", wrapper.GetApiV1UserMe)
 	router.GET(options.BaseURL+"/api/v1/user/:userId", wrapper.GetApiV1UserUserId)
 }

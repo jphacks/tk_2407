@@ -5,7 +5,9 @@ info:
 paths:
   /api/v1/health:
     get:
-      description: health check
+      tags:
+        - health
+      description: Health check
       responses:
         '200':
           description: OK
@@ -15,14 +17,16 @@ paths:
                 $ref: "#/components/schemas/HealthRes"
   /api/v1/messages/{locationId}:
     get:
-      description: get message list
+      tags:
+        - messages
+      description: Get message list
       parameters:
-      - name: locationId
-        in: path
-        required: true
-        description: The ID of the location to get messages for
-        schema:
-          type: string
+        - name: locationId
+          in: path
+          required: true
+          description: The ID of the location to get messages for
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -30,8 +34,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessMessageRes"
+  /api/v1/spot/{spotId}/photo:
+    get:
+      summary: Retrieve a list of locations
+      description: Retrieve a list of locations based on longitude, latitude
+      parameters:
+        - name: spotId
+          in: path
+          required: true
+          description: The ID of the location.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
   /api/v1/spots:
     get:
+      tags:
+        - spots
+      summary: Retrieve a list of locations
       description: Retrieve a list of locations based on longitude, latitude
       parameters:
         - name: longitude
@@ -40,14 +66,14 @@ paths:
           description: The longitude of the location.
           schema:
             type: number
-            format: float
+            format: double
         - name: latitude
           in: query
           required: true
           description: The latitude of the location.
           schema:
             type: number
-            format: float
+            format: double
       responses:
         '200':
           description: OK
@@ -57,14 +83,16 @@ paths:
                 $ref: "#/components/schemas/SuccessLocationRes"
   /api/v1/user/{userId}:
     get:
-      description: get user
+      tags:
+        - user
+      description: Get By ID
       parameters:
-      - name: userId
-        in: path
-        required: true
-        description: The ID of user
-        schema:
-          type: string
+        - name: userId
+          in: path
+          required: true
+          description: The ID of user
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -72,7 +100,134 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessUserRes"
-
+  /api/v1/login:
+    post:
+      tags:
+        - auth
+      description: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLoginRes"
+  /api/v1/signup:
+    post:
+      tags:
+        - auth
+      description: Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - username
+                - password
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessSignupRes"
+  /api/v1/message:
+    post:
+      tags:
+        - messages
+      description: Post a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                spotId:
+                  type: string
+                userid:
+                  type: string
+                photoUrl:
+                  type: string
+                content:
+                  type: string
+              required:
+                - spotId
+                - userid
+                - photoUrl
+                - content
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessageCreateRes"
+  /api/v1/user/me:
+    get:
+      tags:
+        - user
+      description: Get current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessUserRes"
+  /api/v1/message/stamp:
+    post:
+      tags:
+        - messages
+      description: Post a stamp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageId:
+                  type: string
+                userId:
+                  type: string
+                stampType:
+                  type: string
+              required:
+                  - messageId
+                  - userId
+                  - stampType
+      responses:
+        '201':
+            description: Created
+            content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/SuccessStampRes"
 components:
   responses:
     UnauthorizedError:
@@ -108,6 +263,12 @@ components:
         message:
           type: string
           example: healthy
+    SuccessStampRes:
+      type : object
+      properties:
+        message:
+          type: string
+      required: [message]
     SuccessMessageRes:
       type: object
       properties:
@@ -117,24 +278,26 @@ components:
             type: object
             properties:
               id:
-                type: string  # メッセージ ID
+                type: string # メッセージ ID
               author_name:
-                type: string  # メッセージの著者名
+                type: string # メッセージの著者名
               content:
-                type: string  # メッセージの内容
+                type: string # メッセージの内容
               stamps:
                 type: object
                 additionalProperties:
                   type: object
                   properties:
+                    type:
+                      type: string # スタンプの種類
                     count:
-                      type: integer  # スタンプのカウント
+                      type: integer # スタンプのカウント
                     is_reacted:
-                      type: boolean  # ユーザーがスタンプを押したかどうか
-                  required: [count,is_reacted]
+                      type: boolean # ユーザーがスタンプを押したかどうか
+                  required: [type, count, is_reacted]
                 nullable: true
-            required: [id, author_name, content]  # messages 配列内の必須フィールド
-      required: [messages]  # SuccessMessageRes の必須フィールド
+            required: [id, author_name, content] # messages 配列内の必須フィールド
+      required: [messages] # SuccessMessageRes の必須フィールド
       example:
         messages:
           - id: 1
@@ -168,49 +331,26 @@ components:
           nullable: true
           type: array
           items:
-            type: object
-            properties:
-              spot_id:
-                type: string
-              google_map_place_id:
-                type: string
-              name:
-                type: string
-              description:
-                type: string
-              photo_url:
-                type: string
-              latitude:
-                type: number
-                format: float
-              longitude:
-                type: number
-                format: float
-            required: [spot_id,google_map_place_id,name,description,latitude,longitude,photo_url]
-      example:
-        spots:
-          - spot_id: "spot123"
-            google_map_place_id: "ChIJN1t_tDeuEmsRUsoyG83frY4"
-            name: "Beautiful Park"
-            description: "A quiet park with lovely scenery and walking paths."
-            latitude: 35.6895
-            longitude: 139.6917
-          - spot_id: "spot456"
-            google_map_place_id: "ChIJyWEHuEmuEmsRm9hTkapTCrk"
-            name: "Historic Museum"
-            description: "A museum showcasing local history and artifacts."
-            latitude: 35.6896
-            longitude: 139.6920
+            $ref: "#/components/schemas/Spot"
     SuccessUserRes:
       properties:
+        userId:
+          type: string
         username:
           type: string
         email:
           type: string
-      required: [username,email]
-      example:
-        username: "johndoe"
-        email: "johndoe@example.com"
+      required: [userId, username, email]
+    SuccessLoginRes:
+      properties:
+        userId:
+          type: string
+      required: [userId]
+    SuccessSignupRes:
+      properties:
+        userId:
+          type: string
+      required: [userId]
     ErrorRes:
       type: object
       required:
@@ -219,3 +359,62 @@ components:
         message:
           type: string
           example: error message
+    SuccessMessageCreateRes:
+      type: object
+      properties:
+        messageId:
+          type: string
+        spotId:
+          type: string
+        userId:
+          type: string
+        content:
+          type: string
+        photoUrl:
+          type: string
+      required: [messageId, spotId, userId, content, photoUrl]
+    Spot:
+      type: object
+      properties:
+        spot_id:
+          type: string
+        google_map_id:
+          type: string
+        google_map_place_id:
+          type: string
+        name:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        address:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        photo_url:
+          type: string
+      required:
+        - spot_id
+        - google_map_place_id
+        - name
+        - latitude
+        - longitude
+        - address
+        - types
+        - photo_url
+        - google_map_id
+      example:
+        spot_id: "spot123"
+        google_map_place_id: "ChIJN1t_tDeuEmsRUsoyG83frY4"
+        name: "Beautiful Park"
+        description: "A quiet park with lovely scenery and walking paths."
+        latitude: 35.6895
+        longitude: 139.6917
+        address: "2 Chome-1-1 Otemachi, Chiyoda City, Tokyo 100-0004, Japan"
+        types: ["park"]
+        photo_url: "https://example.com/photo.jpg"

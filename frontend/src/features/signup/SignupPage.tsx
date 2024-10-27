@@ -1,0 +1,131 @@
+'use client'
+
+import React from 'react'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import Link from 'next/link'
+import apiClient from '@/apiClient'
+import { useRouter } from 'next/navigation'
+
+const formSchema = z.object({
+  email: z.string().email({ message: 'メールアドレスの形式が不適切です。' }),
+  username: z.string().min(1, {
+    message: 'ユーザー名は必須です。',
+  }),
+  password: z.string().min(6, {
+    message: '6文字以上である必要があります。',
+  }),
+})
+
+function SignupPage() {
+  const router = useRouter()
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      username: '',
+      password: '',
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const res = await apiClient.api.v1.signup.$post({
+        body: {
+          email: values.email,
+          username: values.username,
+          password: values.password,
+        },
+      })
+      // fix me
+      console.log(res)
+      return router.push('/map')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  return (
+    <div
+      className="bg-cover bg-center bg-no-repeat min-h-screen w-screen flex items-center justify-center"
+      style={{ backgroundImage: "url('wallpaper.png')" }}
+    >
+      <div className="w-full flex flex-col items-center">
+        <Card className="w-[90%] md:w-[40%] sm:w-[90%">
+          <div className="my-4 flex flex-col items-center ">
+            <img src="tsumugi.png" width={128} height={128} alt="" />
+          </div>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>メールアドレス</FormLabel>
+                      <FormControl>
+                        <Input placeholder="example@email.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ユーザー名</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>パスワード</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-between items-center">
+                  <Link href="/login" className="underline">
+                    ログイン画面へ
+                  </Link>
+                  <Button type="submit">サインアップ</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+export default SignupPage

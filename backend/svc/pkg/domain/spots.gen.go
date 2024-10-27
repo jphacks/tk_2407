@@ -12,15 +12,10 @@ const TableNameSpot = "spots"
 
 // Spot mapped from table <spots>
 type Spot struct {
-	ID               string     `gorm:"column:id;type:character(26);primaryKey" json:"id"`
-	Name             string     `gorm:"column:name;type:character varying(255);not null" json:"name"`
-	Description      *string    `gorm:"column:description;type:text" json:"description"`
-	PhotoURL         *string    `gorm:"column:photo_url;type:text" json:"photo_url"`
-	GoogleMapPlaceID *string    `gorm:"column:google_map_place_id;type:character varying(255)" json:"google_map_place_id"`
-	Latitude         *float64   `gorm:"column:latitude;type:double precision" json:"latitude"`
-	Longitude        *float64   `gorm:"column:longitude;type:double precision" json:"longitude"`
-	CreatedAt        *time.Time `gorm:"column:created_at;type:timestamp with time zone;default:now()" json:"created_at"`
-	UpdatedAt        *time.Time `gorm:"column:updated_at;type:timestamp with time zone;default:now()" json:"updated_at"`
+	ID        string     `gorm:"column:id;type:character(26);primaryKey" json:"id"`
+	GmID      string     `gorm:"column:gm_id;type:character varying(255);not null" json:"gm_id"`
+	CreatedAt *time.Time `gorm:"column:created_at;type:timestamp with time zone;default:now()" json:"created_at"`
+	UpdatedAt *time.Time `gorm:"column:updated_at;type:timestamp with time zone;default:now()" json:"updated_at"`
 }
 
 // TableName Spot's table name

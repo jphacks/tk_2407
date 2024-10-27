@@ -4,5 +4,9 @@ package settings
 
 type (
 	ThirdParty struct {
+		GoogleMaps GoogleMaps `yaml:"google_maps"`
+	}
+	GoogleMaps struct {
+		APIKey string
 	}
 )

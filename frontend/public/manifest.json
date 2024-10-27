@@ -1,0 +1,26 @@
+{
+  "name": "つむぎ",
+  "short_name": "つむぎ",
+  "description": "Description of your app, providing context to users.",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/tsumugi-white-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    },
+    {
+      "src": "/tsumugi-white-512.jpg",
+      "type": "image/jpg"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "social"
+  ]
+}

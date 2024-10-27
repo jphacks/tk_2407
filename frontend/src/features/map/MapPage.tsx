@@ -5,7 +5,6 @@ import { useCurrentLocation } from '@/hooks/useCurrentLocation'
 export default function MapPage() {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
   const currentLocation = useCurrentLocation()
-
   if (currentLocation.error) {
     return null
   }
