@@ -8,18 +8,21 @@ type HealthRes struct {
 	Message string `json:"message"`
 }
 
+// Spot defines model for Spot.
+type Spot struct {
+	Address          string   `json:"address"`
+	GoogleMapPlaceId string   `json:"google_map_place_id"`
+	Latitude         float32  `json:"latitude"`
+	Longitude        float32  `json:"longitude"`
+	Name             string   `json:"name"`
+	PhotoUrl         string   `json:"photo_url"`
+	SpotId           string   `json:"spot_id"`
+	Types            []string `json:"types"`
+}
+
 // SuccessLocationRes defines model for SuccessLocationRes.
 type SuccessLocationRes struct {
-	Spots *[]struct {
-		Address          string   `json:"address"`
-		GoogleMapPlaceId string   `json:"google_map_place_id"`
-		Latitude         float32  `json:"latitude"`
-		Longitude        float32  `json:"longitude"`
-		Name             string   `json:"name"`
-		PhotoUrl         string   `json:"photo_url"`
-		SpotId           string   `json:"spot_id"`
-		Types            []string `json:"types"`
-	} `json:"spots"`
+	Spots *[]Spot `json:"spots"`
 }
 
 // SuccessLoginRes defines model for SuccessLoginRes.
