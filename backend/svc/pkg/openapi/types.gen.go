@@ -11,9 +11,10 @@ type HealthRes struct {
 // Spot defines model for Spot.
 type Spot struct {
 	Address          string   `json:"address"`
+	GoogleMapId      string   `json:"google_map_id"`
 	GoogleMapPlaceId string   `json:"google_map_place_id"`
-	Latitude         float32  `json:"latitude"`
-	Longitude        float32  `json:"longitude"`
+	Latitude         float64  `json:"latitude"`
+	Longitude        float64  `json:"longitude"`
 	Name             string   `json:"name"`
 	PhotoUrl         string   `json:"photo_url"`
 	SpotId           string   `json:"spot_id"`
@@ -70,10 +71,10 @@ type PostApiV1SignupJSONBody struct {
 // GetApiV1SpotsParams defines parameters for GetApiV1Spots.
 type GetApiV1SpotsParams struct {
 	// Longitude The longitude of the location.
-	Longitude float32 `form:"longitude" json:"longitude"`
+	Longitude float64 `form:"longitude" json:"longitude"`
 
 	// Latitude The latitude of the location.
-	Latitude float32 `form:"latitude" json:"latitude"`
+	Latitude float64 `form:"latitude" json:"latitude"`
 }
 
 // PostApiV1LoginJSONRequestBody defines body for PostApiV1Login for application/json ContentType.
