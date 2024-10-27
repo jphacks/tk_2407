@@ -29,8 +29,8 @@ func (mu MessageUsecase) Create(spotID string, userID string, content string, ph
 		ID:        messageID.String(),
 		UserID:    userID,
 		SpotID:    spotID,
-		PhotoURL:  &photoURL,
-		Content:   &content,
+		PhotoURL:  photoURL,
+		Content:   content,
 		CreatedAt: &now,
 		UpdatedAt: &now,
 	}
