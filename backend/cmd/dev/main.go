@@ -100,9 +100,9 @@ func runMigration(dbUrl string) error {
 	if !ok {
 		return errors.New("version key not found in config.json")
 	}
-	verUInt, ok := ver.(uint)
+	verUInt, ok := ver.(int)
 	if !ok {
-		return fmt.Errorf("version key is not uint: %+v", ver)
+		return fmt.Errorf("version key is not int: %+v", ver)
 	}
 
 	var forceVer *uint
@@ -133,7 +133,7 @@ func runMigration(dbUrl string) error {
 		return nil
 	}
 	log.Printf("Migrating to version: %v\n", verUInt)
-	if err := m.Migrate(verUInt); err != nil {
+	if err := m.Migrate(uint(verUInt)); err != nil {
 		if !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to migrate: %w", err)
 		}
