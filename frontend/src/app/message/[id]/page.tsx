@@ -57,31 +57,6 @@ const cards: Card[] = [
     color: 'bg-blue-300',
     stamps: [],
   },
-  {
-    id: 'e',
-    author_name: '匿名E',
-    content: '久々',
-    color: 'bg-purple-300',
-    stamps: [],
-  },
-  {
-    id: 'f',
-    author_name: '匿名F',
-    content: '成人しました',
-    color: 'bg-yellow-300',
-    stamps: [
-      {
-        type: 'thumbs_up',
-        count: 1,
-        is_reacted: false,
-      },
-      {
-        type: 'heart',
-        count: 1,
-        is_reacted: false,
-      },
-    ],
-  },
 ]
 
 export default function MessagePage() {
@@ -106,14 +81,16 @@ export default function MessagePage() {
 
   return (
     <>
-      <MessageCards cardList={cardList} />
-      <button
-        className="z-30 fixed bottom-4 right-4 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
-        onClick={() => setIsModalOpen(true)}
-      >
-        <Plus size={24} />
-      </button>
-      {isModalOpen && <MessageModal handleCreate={handleCreate} />}
+      <div className="bg-yellow-200 h-screen">
+        <MessageCards cardList={cardList} />
+        <button
+          className="z-30 fixed bottom-4 right-4 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <Plus size={24} />
+        </button>
+        {isModalOpen && <MessageModal handleCreate={handleCreate} />}
+      </div>
     </>
   )
 }
