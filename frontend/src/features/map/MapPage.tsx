@@ -45,7 +45,7 @@ export default function MapPage() {
       <h1>Map</h1>
       {!apiIsLoaded && <p>ロード中</p>}
       <div>
-        <SpotList spots={spots} isOpen={true} onToggle={toggleIsOpen} />
+        <SpotList spots={spots} isOpen={isOpen} onToggle={toggleIsOpen} />
         <APIProvider apiKey={API_KEY}>
           <CustomMap spots={spots} centerLocation={currentLocation.value} />
         </APIProvider>

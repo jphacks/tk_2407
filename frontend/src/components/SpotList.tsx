@@ -3,11 +3,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-
-type Spot = {
-  id: number
-  name: string
-}
+import { Spot } from '@/api/@types'
 
 type SpotListProps = {
   spots: Spot[]
