@@ -54,7 +54,7 @@ export function SpotList({ spots, isOpen, onToggle }: SpotListProps) {
       {isOpen && (
         <ScrollArea className="h-[calc(100%-56px)] pb-10">
           {spots.map((spot) => (
-            <MessageSpot key={spot.id} {...spot} />
+            <MessageSpot key={spot.name} {...spot} />
           ))}
         </ScrollArea>
       )}
