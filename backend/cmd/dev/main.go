@@ -7,9 +7,11 @@ import (
 	"backend/svc/pkg/query"
 	"backend/svc/pkg/usecase"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"gorm.io/gorm"
 
@@ -54,20 +56,10 @@ func main() {
 	}
 
 	if conf.Application.Server.OnProduction {
-		log.Println("Running migration...")
-		m, err := migrate.New("file:///app/migrations", dbUrl)
-		if err != nil {
-			log.Fatalf("failed to create migration: %v", err)
+		if err := runMigration(dbUrl); err != nil {
+			log.Fatalf("error during migration: %v", err)
 			return
 		}
-		if err := m.Up(); err != nil {
-			if !errors.Is(err, migrate.ErrNoChange) {
-				log.Fatalf("failed to migrate: %v", err)
-				return
-			}
-			log.Println("No migration needed.")
-		}
-		log.Println("Migration done.")
 	}
 
 	gormDB, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
@@ -89,6 +81,70 @@ func main() {
 		log.Fatalf("Failed to start server... %v", err)
 		return
 	}
+}
+
+func runMigration(dbUrl string) error {
+	log.Println("Running migration...")
+
+	//read json from /app/migrations/.current.json
+	if _, err := os.Stat("/app/migrations/.current.json"); err == nil {
+		log.Println("No migration run")
+		return nil
+	}
+	// parse json
+	data, err := os.ReadFile("/app/migrations/.current.json")
+	if err != nil {
+		return fmt.Errorf("failed to read .current.json: %w", err)
+	}
+	var current map[string]interface{}
+	if err := json.Unmarshal(data, &current); err != nil {
+		return fmt.Errorf("failed to unmarshal .current.json: %w", err)
+	}
+
+	ver, ok := current["version"]
+	if !ok {
+		return errors.New("version key not found in .current.json")
+	}
+	verUInt, ok := ver.(uint)
+	if !ok {
+		return fmt.Errorf("version key is not uint: %+v", ver)
+	}
+
+	var forceVer *uint
+	if force, ok := current["force"]; ok {
+		forceV, ok := force.(uint)
+		if !ok {
+			return fmt.Errorf("force key is not uint: %+v", force)
+		}
+		forceVer = &forceV
+	}
+
+	m, err := migrate.New("file:///app/migrations", dbUrl)
+	if err != nil {
+		return fmt.Errorf("failed to create migration: %w", err)
+	}
+	version, b, err := m.Version()
+	if err != nil {
+		return fmt.Errorf("failed to get version: %w", err)
+	}
+	log.Printf("Current version: %v\n, dirty: %v\n", version, b)
+
+	if forceVer != nil {
+		log.Printf("Forcing version: %v\n", *forceVer)
+		if err := m.Force(int(*forceVer)); err != nil {
+			return fmt.Errorf("failed to force migration: %w", err)
+		}
+		log.Println("Force Migration done.")
+		return nil
+	}
+	log.Printf("Migrating to version: %v\n", verUInt)
+	if err := m.Migrate(verUInt); err != nil {
+		if !errors.Is(err, migrate.ErrNoChange) {
+			return fmt.Errorf("failed to migrate: %w", err)
+		}
+	}
+	log.Println("Migration done.")
+	return nil
 }
 
 // Implement APIのルーティングをするところ
