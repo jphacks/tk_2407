@@ -1,5 +1,4 @@
 import { Map, Marker } from '@vis.gl/react-google-maps'
-import { Location } from '@/types/Location'
 import { Circle } from '@/components/Circle'
 import { CustomMarker } from '@/components/CustomMarker'
 
@@ -9,6 +8,31 @@ type CustomMapProps = {
 
 export function CustomMap(props: CustomMapProps) {
   const { centerLocation } = props
+
+  const spotsList = [
+    {
+      id: 1,
+      name: 'Spot 1',
+      description: 'This is spot 1',
+      latitude: 35.681236,
+      longitude: 139.767125,
+    },
+    {
+      id: 2,
+      name: 'Spot 2',
+      description: 'This is spot 2',
+      latitude: 35.681236,
+      longitude: 139.767125,
+    },
+    {
+      id: 3,
+      name: 'Spot 3',
+      description: 'This is spot 3',
+      latitude: 35.681236,
+      longitude: 139.767125,
+    },
+  ]
+
   return (
     <Map
       style={{ width: '100vw', height: '100vh' }}
@@ -36,11 +60,18 @@ export function CustomMap(props: CustomMapProps) {
         fillColor={'#3b82f6'}
         fillOpacity={0.3}
       />
-      <CustomMarker
-        location={{ latitude: 35.681236, longitude: 139.767125 }}
-        title="tokyoDOM"
-        description="aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      />
+      {spotsList.map((spot) => (
+        return (
+          <CustomMarker
+            location={{ latitude: spot.latitude, longitude: spot.longitude }}
+            id={spot.id}
+            title={spot.name}
+            description={spot.description}
+          />
+        )
+      ))
+      }
+      
     </Map>
   )
 }
