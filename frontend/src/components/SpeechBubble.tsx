@@ -8,7 +8,7 @@ interface SpeechBubbleProps {
   description: string
 }
 
-export default function SpeechBubble({
+export function SpeechBubble({
   title,
   imageUrl,
   description,

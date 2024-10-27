@@ -6,6 +6,7 @@ import {
 } from '@vis.gl/react-google-maps'
 import { CustomPin } from '@/components/CustomPin'
 import { useState } from 'react'
+import { SpeechBubble } from '@/components/SpeechBubble'
 
 export function CustomMarker({ location }: { location: Location }) {
   const [isOpenInfowindow, setIsOpenInfowindow] = useState<boolean>(false)
@@ -27,7 +28,11 @@ export function CustomMarker({ location }: { location: Location }) {
           maxWidth={200}
           onCloseClick={() => setIsOpenInfowindow(false)}
         >
-          This is an example for the combined with an Infowindow.
+          <SpeechBubble
+            title={'東京ドーム'}
+            imageUrl={'/saru.png'}
+            description={'aaaaaaa'}
+          />
         </InfoWindow>
       )}
     </AdvancedMarker>
