@@ -12,20 +12,20 @@ CREATE TABLE users
 -- gm_places: GoogleMapsAPI から取得した施設情報を格納するテーブル
 CREATE TABLE gm_places
 (
-    id                 VARCHAR(255) PRIMARY KEY,
-    place_id           VARCHAR(255) UNIQUE NOT NULL,
-    name               VARCHAR(255)        NOT NULL,
-    formatted_address  TEXT                NOT NULL,
-    icon               VARCHAR(255)        NOT NULL,
+    id                 VARCHAR(255),
+    place_id           VARCHAR(255) PRIMARY KEY,
+    name               VARCHAR(255) NOT NULL,
+    formatted_address  TEXT         NOT NULL,
+    icon               VARCHAR(255) NOT NULL,
     rating             REAL CHECK (rating >= 1.0 AND rating <= 5.0),
-    user_ratings_total INT                 NOT NULL,
+    user_ratings_total INT          NOT NULL,
     price_level        INT CHECK (price_level >= 0 AND price_level <= 4),
-    vicinity           TEXT                NOT NULL,
-    permanently_closed BOOLEAN             NOT NULL,
-    business_status    VARCHAR(255)        NOT NULL,
-    location_latitude  FLOAT               NOT NULL,
-    location_longitude FLOAT               NOT NULL,
-    types              TEXT                NOT NULL, -- カンマ区切りでタイプ情報を格納
+    vicinity           TEXT         NOT NULL,
+    permanently_closed BOOLEAN      NOT NULL,
+    business_status    VARCHAR(255) NOT NULL,
+    location_latitude  FLOAT        NOT NULL,
+    location_longitude FLOAT        NOT NULL,
+    types              TEXT         NOT NULL, -- カンマ区切りでタイプ情報を格納
     created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE gm_places
 CREATE TABLE gm_place_photos
 (
     id              SERIAL PRIMARY KEY,
-    gm_place_id     VARCHAR(255) REFERENCES gm_places (id) ON DELETE CASCADE,
+    gm_place_id     VARCHAR(255) REFERENCES gm_places (place_id) ON DELETE CASCADE,
     photo_reference VARCHAR(255) NOT NULL,
     height          INT,
     width           INT
@@ -50,7 +50,7 @@ CREATE TABLE messages
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (spot_id) REFERENCES gm_places (id)
+    FOREIGN KEY (spot_id) REFERENCES gm_places (place_id)
 );
 
 -- Table: stamps

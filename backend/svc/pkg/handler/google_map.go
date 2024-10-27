@@ -85,7 +85,6 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 				rating = &result.Rating
 			}
 			targets = append(targets, &domain.GmPlace{
-				ID:                result.ID,
 				PlaceID:           result.PlaceID,
 				Name:              result.Name,
 				FormattedAddress:  result.FormattedAddress,
@@ -100,17 +99,16 @@ func (h *GoogleMapHandler) GetApiV1Spots(c *gin.Context) {
 				LocationLongitude: result.Geometry.Location.Lng,
 				Types:             strings.Join(result.Types, ","),
 			})
-		}
-		err := h.q.GmPlace.Save(targets...)
-		if err != nil {
-			log.Printf("failed to create gm place: %v", err)
-			return
+			if err := h.q.GmPlace.Save(targets...); err != nil {
+				log.Printf("failed to create gm place: %v", err)
+				return
+			}
 		}
 		targetPhotos := make([]*domain.GmPlacePhoto, 0)
 		for _, result := range results {
 			for _, photo := range result.Photos {
 				targetPhotos = append(targetPhotos, &domain.GmPlacePhoto{
-					GmPlaceID:      &result.ID,
+					GmPlaceID:      &result.PlaceID,
 					PhotoReference: photo.PhotoReference,
 					Width:          util.GetPtr(int32(photo.Width)),
 					Height:         util.GetPtr(int32(photo.Height)),

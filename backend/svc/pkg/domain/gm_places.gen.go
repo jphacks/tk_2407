@@ -12,8 +12,8 @@ const TableNameGmPlace = "gm_places"
 
 // GmPlace mapped from table <gm_places>
 type GmPlace struct {
-	ID                string     `gorm:"column:id;type:character varying(255);primaryKey" json:"id"`
-	PlaceID           string     `gorm:"column:place_id;type:character varying(255);not null" json:"place_id"`
+	ID                *string    `gorm:"column:id;type:character varying(255)" json:"id"`
+	PlaceID           string     `gorm:"column:place_id;type:character varying(255);primaryKey" json:"place_id"`
 	Name              string     `gorm:"column:name;type:character varying(255);not null" json:"name"`
 	FormattedAddress  string     `gorm:"column:formatted_address;type:text;not null" json:"formatted_address"`
 	Icon              string     `gorm:"column:icon;type:character varying(255);not null" json:"icon"`
