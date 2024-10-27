@@ -87,7 +87,7 @@ func runMigration(dbUrl string) error {
 	log.Println("Running migration...")
 
 	//read json from /app/migrations/.current.json
-	if _, err := os.Stat("/app/migrations/.current.json"); err == nil {
+	if _, err := os.Stat("/app/migrations/.config.json"); err == nil {
 		log.Println("No migration run")
 		return nil
 	}
